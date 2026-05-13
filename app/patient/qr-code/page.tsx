@@ -12,6 +12,8 @@ import { Spinner } from '@/components/ui/Spinner';
 type QrResponse = {
   qrUuid: string;
   qrImageBase64: string;
+  firstName: string;
+  lastName: string;
 };
 
 export default function PatientQrCodePage() {
@@ -33,7 +35,12 @@ export default function PatientQrCodePage() {
         }
 
         if (!cancelled) {
-          setQrCode({ qrUuid: data.qrUuid ?? '', qrImageBase64: data.qrImageBase64 ?? '' });
+          setQrCode({ 
+            qrUuid: data.qrUuid ?? '', 
+            qrImageBase64: data.qrImageBase64 ?? '',
+            firstName: data.firstName ?? '',
+            lastName: data.lastName ?? '',
+          });
           setError(null);
         }
       } catch (fetchError: any) {
@@ -60,7 +67,7 @@ export default function PatientQrCodePage() {
     }
 
     const link = document.createElement('a');
-    link.href = `data:image/png;base64,${qrCode.qrImageBase64}`;
+    link.href = qrCode.qrImageBase64;
     link.download = 'lunas-qr-code.png';
     link.click();
   };
@@ -81,7 +88,12 @@ export default function PatientQrCodePage() {
         throw new Error(data.error || 'Unable to load QR code.');
       }
 
-      setQrCode({ qrUuid: data.qrUuid ?? '', qrImageBase64: data.qrImageBase64 ?? '' });
+      setQrCode({ 
+        qrUuid: data.qrUuid ?? '', 
+        qrImageBase64: data.qrImageBase64 ?? '',
+        firstName: data.firstName ?? '',
+        lastName: data.lastName ?? '',
+      });
     } catch (refreshError: any) {
       setError(refreshError.message || 'Unable to load QR code.');
     } finally {
@@ -116,11 +128,33 @@ export default function PatientQrCodePage() {
             ) : qrCode ? (
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_240px]">
                 <div className="flex items-center justify-center rounded-[2rem] bg-[#fbf8f2] p-8">
-                  <img
-                    src={`data:image/png;base64,${qrCode.qrImageBase64}`}
-                    alt="Patient QR code"
-                    className="h-auto w-full max-w-[320px] rounded-3xl border border-neutral-200 bg-white p-4 shadow-sm"
-                  />
+                  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-6 shadow-2xl border border-white/10 w-full max-w-[320px]">
+                    <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 blur-2xl"></div>
+                    <div className="absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-amber-500/10 blur-2xl"></div>
+                    
+                    <div className="relative z-10 flex flex-col items-center">
+                      <div className="mb-6 flex items-center gap-2 self-start">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-tr from-amber-200 to-amber-500">
+                           <div className="h-3 w-3 rounded-full bg-[#0f172a]/20 backdrop-blur-sm" />
+                        </div>
+                        <span className="text-sm font-bold tracking-widest text-white">LUNAS</span>
+                        <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-white/80">Passport</span>
+                      </div>
+                      
+                      <div className="rounded-2xl bg-white p-4 shadow-inner ring-4 ring-white/10">
+                        <img
+                          src={qrCode.qrImageBase64}
+                          alt="Patient QR code"
+                          className="h-48 w-48 object-contain mix-blend-multiply"
+                        />
+                      </div>
+                      
+                      <div className="mt-6 w-full text-left">
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">Patient</p>
+                        <p className="text-lg font-bold text-white tracking-wide truncate">{qrCode.firstName} {qrCode.lastName}</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
