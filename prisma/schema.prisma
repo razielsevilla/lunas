@@ -6,3 +6,189 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Role {
+  PATIENT
+  PROFESSIONAL
+  ADMIN
+}
+
+enum PrcStatus {
+  PENDING
+  VERIFIED
+  SUSPENDED
+  REJECTED
+}
+
+enum AccessStatus {
+  SUCCESS
+  DENIED
+  LOCKED
+}
+
+enum Allergyseverity {
+  MILD
+  MODERATE
+  SEVERE
+  LIFE_THREATENING
+}
+
+enum InteractionSeverity {
+  LOW
+  MODERATE
+  HIGH
+  CONTRAINDICATED
+}
+
+model User {
+  id                  String                @id @default(cuid())
+  email               String                @unique
+  passwordHash        String
+  firstName           String
+  lastName            String
+  mobile              String?
+  role                Role                  @default(PATIENT)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  patientProfile      PatientProfile?
+  professionalProfile ProfessionalProfile?
+  sessions            Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PatientProfile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  qrUuid          String   @unique @default(uuid())
+  bloodType       String?
+  heightCm        String?
+  weightKg        String?
+  isOrganDonor    Boolean  @default(false)
+  profileComplete Int      @default(0)
+  lastUpdated     DateTime @default(now())
+  createdAt       DateTime @default(now())
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allergies         Allergy[]
+  medications       Medication[]
+  surgeries         Surgery[]
+  emergencyContacts EmergencyContact[]
+  accessLogs        AccessLog[]
+  drugInteractions  DrugInteraction[]
+
+  @@index([qrUuid])
+}
+
+model Allergy {
+  id               String           @id @default(cuid())
+  patientProfileId String
+  allergen         String
+  reaction         String?
+  severity         Allergyseverity
+  createdAt        DateTime         @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model Medication {
+  id               String   @id @default(cuid())
+  patientProfileId String
+  name             String
+  rxNormCode       String?
+  dosage           String?
+  frequency        String?
+  prescribedFor    String?
+  createdAt        DateTime @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model DrugInteraction {
+  id               String              @id @default(cuid())
+  patientProfileId String
+  drug1Name        String
+  drug2Name        String
+  severity         InteractionSeverity
+  description      String
+  checkedAt        DateTime            @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model Surgery {
+  id               String   @id @default(cuid())
+  patientProfileId String
+  procedure        String
+  datePerformed    String?
+  hospital         String?
+  notes            String?
+  createdAt        DateTime @default(now())
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model EmergencyContact {
+  id               String  @id @default(cuid())
+  patientProfileId String
+  name             String
+  relationship     String
+  mobile           String
+  email            String?
+
+  patientProfile PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model ProfessionalProfile {
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  prcNumber        String    @unique
+  profession       String
+  specialization   String?
+  hospitalAffil    String?
+  prcStatus        PrcStatus @default(PENDING)
+  pin              String?
+  pinFailCount     Int       @default(0)
+  lastPrcCheck     DateTime?
+  verifiedAt       DateTime?
+  createdAt        DateTime  @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessLogs AccessLog[]
+
+  @@index([prcNumber])
+}
+
+model AccessLog {
+  id                    String       @id @default(cuid())
+  patientProfileId      String
+  professionalProfileId String
+  accessedAt            DateTime     @default(now())
+  status                AccessStatus
+  durationSeconds       Int?
+  ipHash                String?
+
+  patientProfile      PatientProfile      @relation(fields: [patientProfileId], references: [id])
+  professionalProfile ProfessionalProfile @relation(fields: [professionalProfileId], references: [id])
+
+  @@index([patientProfileId])
+}
+
+model AdminAuditLog {
+  id          String   @id @default(cuid())
+  eventType   String
+  actorIdHash String
+  targetIdHash String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

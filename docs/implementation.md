@@ -57,12 +57,12 @@ feature/landing-page      → Member G
 **All hands on deck. Goal: everyone can run the app locally by H+1.**
 
 ### Team Lead (You)
-- [ ] Create GitHub repo, set up branch protection on `main`
-- [ ] Run `npx create-next-app@latest lunas --typescript --tailwind --app`
-- [ ] Install all dependencies (see `ENVIRONMENT.md`)
-- [ ] Initialize Prisma: `npx prisma init`
-- [ ] Paste full schema from `DATABASE_SCHEMA.md` into `prisma/schema.prisma`
-- [ ] Create `.env.example` from `ENVIRONMENT.md`
+- [x] Create GitHub repo, set up branch protection on `main`
+- [x] Run `npx create-next-app@latest lunas --typescript --tailwind --app`
+- [x] Install all dependencies (see `ENVIRONMENT.md`)
+- [x] Initialize Prisma: `npx prisma init`
+- [x] Paste full schema from `schema.md` into `prisma/schema.prisma`
+- [x] Create `.env.example` from `ENVIRONMENT.md`
 - [ ] Create `.env` with real values (Supabase DB, Gmail SMTP, generated keys)
 - [ ] Run `npx prisma migrate dev --name init && npx prisma generate`
 - [ ] Push to GitHub. Share `.env` privately with the team (Discord DM / secure note)
