@@ -1,46 +1,56 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
 import { requireRole, toAuthErrorResponse } from '@/lib/auth';
+import { HTTP, parseBody } from '@/lib/api';
 import { checkInteractions } from '@/lib/drugcheck';
 import { InteractionSeverity } from '@prisma/client';
 
 // ---------------------------------------------------------------------------
-// POST /api/patient/medications — add a medication + run drug interaction check
+// POST /api/patient/medications
 // ---------------------------------------------------------------------------
 
 const addMedicationSchema = z.object({
-  name: z.string().min(1).max(200).trim(),
-  rxNormCode: z.string().max(20).trim().optional(),
-  dosage: z.string().max(100).trim().optional(),
-  frequency: z.string().max(100).trim().optional(),
-  prescribedFor: z.string().max(300).trim().optional(),
+  name: z
+    .string({ required_error: 'Medication name is required.' })
+    .min(1, 'Medication name cannot be empty.')
+    .max(200, 'Medication name must be 200 characters or less.')
+    .trim(),
+  rxNormCode: z.string().max(20, 'RxNorm code must be 20 characters or less.').trim().optional(),
+  dosage: z.string().max(100, 'Dosage must be 100 characters or less.').trim().optional(),
+  frequency: z.string().max(100, 'Frequency must be 100 characters or less.').trim().optional(),
+  prescribedFor: z
+    .string()
+    .max(300, 'Prescribed-for must be 300 characters or less.')
+    .trim()
+    .optional(),
 });
 
 export async function POST(req: Request): Promise<Response> {
   try {
     const session = await requireRole(req, 'PATIENT');
-    const body = await req.json();
 
-    const parsed = addMedicationSchema.safeParse(body);
-    if (!parsed.success) {
-      return Response.json(
-        { error: parsed.error.errors[0].message },
-        { status: 400 }
-      );
-    }
+    const parsed = await parseBody(req, addMedicationSchema);
+    if (parsed.response) return parsed.response;
 
-    // Resolve the patient's profile
     const profile = await prisma.patientProfile.findUnique({
       where: { userId: session.user.id },
       select: { id: true },
-      // Include existing medications for interaction check
     });
 
-    if (!profile) {
-      return Response.json({ error: 'Patient profile not found.' }, { status: 404 });
+    if (!profile) return HTTP.notFound('Patient profile');
+
+    // Prevent adding the same medication twice
+    const duplicate = await prisma.medication.findFirst({
+      where: {
+        patientProfileId: profile.id,
+        name: { equals: parsed.data.name, mode: 'insensitive' },
+      },
+    });
+
+    if (duplicate) {
+      return HTTP.conflict(`"${parsed.data.name}" is already in your medication list.`);
     }
 
-    // Create the medication first
     const medication = await prisma.medication.create({
       data: {
         patientProfileId: profile.id,
@@ -52,18 +62,15 @@ export async function POST(req: Request): Promise<Response> {
       },
     });
 
-    // Fetch all current medications (including newly added) for interaction check
+    // Re-run drug interaction check across all medications
     const allMeds = await prisma.medication.findMany({
       where: { patientProfileId: profile.id },
       select: { name: true },
     });
 
     const drugNames = allMeds.map((m) => m.name);
-
-    // Run drug interaction check (local fallback by default, DrugBank if key set)
     const interactions = await checkInteractions(drugNames);
 
-    // Rebuild DrugInteraction table for this patient (clear old → insert fresh)
     if (drugNames.length >= 2) {
       await prisma.$transaction([
         prisma.drugInteraction.deleteMany({ where: { patientProfileId: profile.id } }),
@@ -84,6 +91,12 @@ export async function POST(req: Request): Promise<Response> {
         medication,
         interactions,
         interactionCount: interactions.length,
+        warning:
+          interactions.some((i) => i.severity === 'CONTRAINDICATED')
+            ? 'CONTRAINDICATED interaction detected. Consult a physician immediately.'
+            : interactions.some((i) => i.severity === 'HIGH')
+            ? 'HIGH severity interaction detected. Review with prescriber.'
+            : null,
       },
       { status: 201 }
     );

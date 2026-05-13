@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { requireRole, toAuthErrorResponse } from '@/lib/auth';
+import { HTTP } from '@/lib/api';
 
 // ---------------------------------------------------------------------------
 // DELETE /api/patient/surgeries/[id]
@@ -18,21 +19,23 @@ export async function DELETE(
       select: { id: true },
     });
 
-    if (!profile) {
-      return Response.json({ error: 'Patient profile not found.' }, { status: 404 });
-    }
+    if (!profile) return HTTP.notFound('Patient profile');
 
     const surgery = await prisma.surgery.findFirst({
       where: { id, patientProfileId: profile.id },
     });
 
-    if (!surgery) {
-      return Response.json({ error: 'Surgery record not found.' }, { status: 404 });
+    if (!surgery) return HTTP.notFound('Surgery record');
+
+    if (surgery.patientProfileId !== profile.id) {
+      return HTTP.forbidden('You do not have permission to delete this surgery record.');
     }
 
     await prisma.surgery.delete({ where: { id } });
 
-    return Response.json({ message: 'Surgery record removed.' });
+    return Response.json({
+      message: `Surgery record "${surgery.procedure}" removed successfully.`,
+    });
   } catch (err) {
     return toAuthErrorResponse(err);
   }

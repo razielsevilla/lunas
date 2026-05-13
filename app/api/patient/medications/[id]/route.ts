@@ -1,11 +1,12 @@
 import { prisma } from '@/lib/db';
 import { requireRole, toAuthErrorResponse } from '@/lib/auth';
-import { checkInteractions } from '@/lib/drugcheck';
+import { HTTP } from '@/lib/api';
+import { checkInteractionsLocal } from '@/lib/drugcheck';
 import { InteractionSeverity } from '@prisma/client';
 
 // ---------------------------------------------------------------------------
 // DELETE /api/patient/medications/[id]
-// Re-runs drug interaction check after removal (interactions may clear)
+// After deletion, re-runs the drug interaction check on remaining medications.
 // ---------------------------------------------------------------------------
 
 export async function DELETE(
@@ -21,49 +22,50 @@ export async function DELETE(
       select: { id: true },
     });
 
-    if (!profile) {
-      return Response.json({ error: 'Patient profile not found.' }, { status: 404 });
-    }
+    if (!profile) return HTTP.notFound('Patient profile');
 
     // Ownership check
     const medication = await prisma.medication.findFirst({
       where: { id, patientProfileId: profile.id },
     });
 
-    if (!medication) {
-      return Response.json({ error: 'Medication not found.' }, { status: 404 });
+    if (!medication) return HTTP.notFound('Medication');
+
+    if (medication.patientProfileId !== profile.id) {
+      return HTTP.forbidden('You do not have permission to delete this medication.');
     }
 
     await prisma.medication.delete({ where: { id } });
 
-    // Re-check interactions with remaining medications
+    // Re-run interaction check on remaining medications
     const remaining = await prisma.medication.findMany({
       where: { patientProfileId: profile.id },
       select: { name: true },
     });
 
-    const drugNames = remaining.map((m) => m.name);
+    const interactions = checkInteractionsLocal(remaining.map((m) => m.name));
 
-    if (drugNames.length >= 2) {
-      const interactions = await checkInteractions(drugNames);
-      await prisma.$transaction([
-        prisma.drugInteraction.deleteMany({ where: { patientProfileId: profile.id } }),
-        prisma.drugInteraction.createMany({
-          data: interactions.map((i) => ({
-            patientProfileId: profile.id,
-            drug1Name: i.drug1Name,
-            drug2Name: i.drug2Name,
-            severity: i.severity as InteractionSeverity,
-            description: i.description,
-          })),
-        }),
-      ]);
-    } else {
-      // Only 0–1 medications left — clear all interactions
-      await prisma.drugInteraction.deleteMany({ where: { patientProfileId: profile.id } });
-    }
+    await prisma.$transaction([
+      prisma.drugInteraction.deleteMany({ where: { patientProfileId: profile.id } }),
+      ...(interactions.length > 0
+        ? [
+            prisma.drugInteraction.createMany({
+              data: interactions.map((i) => ({
+                patientProfileId: profile.id,
+                drug1Name: i.drug1Name,
+                drug2Name: i.drug2Name,
+                severity: i.severity as InteractionSeverity,
+                description: i.description,
+              })),
+            }),
+          ]
+        : []),
+    ]);
 
-    return Response.json({ message: 'Medication removed and interactions updated.' });
+    return Response.json({
+      message: `"${medication.name}" removed successfully.`,
+      interactionsRemaining: interactions.length,
+    });
   } catch (err) {
     return toAuthErrorResponse(err);
   }

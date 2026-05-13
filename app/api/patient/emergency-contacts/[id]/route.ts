@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
 import { requireRole, toAuthErrorResponse } from '@/lib/auth';
+import { HTTP } from '@/lib/api';
 
 // ---------------------------------------------------------------------------
 // DELETE /api/patient/emergency-contacts/[id]
@@ -18,21 +19,23 @@ export async function DELETE(
       select: { id: true },
     });
 
-    if (!profile) {
-      return Response.json({ error: 'Patient profile not found.' }, { status: 404 });
-    }
+    if (!profile) return HTTP.notFound('Patient profile');
 
     const contact = await prisma.emergencyContact.findFirst({
       where: { id, patientProfileId: profile.id },
     });
 
-    if (!contact) {
-      return Response.json({ error: 'Emergency contact not found.' }, { status: 404 });
+    if (!contact) return HTTP.notFound('Emergency contact');
+
+    if (contact.patientProfileId !== profile.id) {
+      return HTTP.forbidden('You do not have permission to delete this emergency contact.');
     }
 
     await prisma.emergencyContact.delete({ where: { id } });
 
-    return Response.json({ message: 'Emergency contact removed.' });
+    return Response.json({
+      message: `Emergency contact "${contact.name}" removed successfully.`,
+    });
   } catch (err) {
     return toAuthErrorResponse(err);
   }
