@@ -174,7 +174,7 @@ export default function LoginPage() {
             Be part of a safer, smarter way to carry your medical record.
           </p>
           <Link 
-            href="/register/patient" 
+            href="/register" 
             className="mt-10 rounded-full border border-white/20 bg-white/5 px-8 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/10"
           >
             Create Account
