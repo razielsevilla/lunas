@@ -121,15 +121,15 @@ Hour 4–5:
 Hour 1–2:
 - [ ] `lib/mailer.ts` — Nodemailer setup, `sendEmail(to, subject, body)`
 - [ ] `lib/sms.ts` — Twilio stub (or `console.log` fallback for demo)
-- [ ] `lib/drugcheck.ts` — DrugBank API call + local fallback table (20 common dangerous pairs)
+- [ ] `lib/drugcheck.ts` — Local hardcoded table of the 20 most common dangerous drug pairs (DEFAULT for MVP). If `DRUGBANK_API_KEY` is provided, `lib/drugcheck.ts` may optionally query an external service (DrugBank or NIH RxNorm) for a "live" lookup.
 
 Hour 2–4:
 - [ ] `lib/qr.ts` — `generateQrImage(uuid: string): Promise<string>` (returns base64 PNG)
 - [ ] `GET /api/patient/qr` — returns QR UUID and base64 image
 - [ ] `GET /api/scan/[uuid]` — public, returns minimal patient info for PIN entry screen
 
-Hour 4–5:
-- [ ] Write local drug interaction fallback table (at least 15 common pairs with severity)
+-Hour 4–5:
+- [ ] Write local hardcoded drug interaction table (20 most common dangerous pairs with severity) and ensure `lib/drugcheck.ts` prefers the local table by default. Add an optional external lookup path enabled only when `DRUGBANK_API_KEY` (or other API keys) are present.
 - [ ] Test `generateQrImage()` in isolation — confirm PNG output
 - [ ] Stub out notification function: `notifyEmergencyContacts(patientProfileId: string)`
 
@@ -216,7 +216,7 @@ Hour 4–5:
 - [ ] `PUT /api/patient/profile` — update basic info (encrypt before save)
 - [ ] `POST /api/patient/allergies` + `DELETE /api/patient/allergies/:id`
 - [ ] `POST /api/patient/medications` + `DELETE /api/patient/medications/:id`
-  - On every medication add/delete: call `lib/drugcheck.ts` and update `DrugInteraction` records
+  - On every medication add/delete: call `lib/drugcheck.ts` and update `DrugInteraction` records (the service prefers the local 20-pair table for MVP; external API calls only when configured).
 - [ ] `POST /api/patient/surgeries` + `DELETE /api/patient/surgeries/:id`
 - [ ] `POST /api/patient/emergency-contacts` + `DELETE /api/patient/emergency-contacts/:id`
 - [ ] `GET /api/patient/access-logs`

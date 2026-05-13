@@ -95,8 +95,11 @@ TWILIO_PHONE_NUMBER="+1xxxxxxxxxx"
 # DRUG INTERACTION API
 # ─────────────────────────────────────────
 
-# DrugBank API key (apply at drugbank.com/covid-19)
-# If not set, system falls back to local drug interaction table
+# External drug interaction lookup (optional)
+# - The MVP uses a local hardcoded table of the 20 most common dangerous drug pairs by default
+#   to guarantee the demo works without external API keys.
+# - If you provide `DRUGBANK_API_KEY` the app may query DrugBank for expanded interaction data.
+# - Optionally, you can integrate NIH RxNorm normalization/lookup for improved matching.
 DRUGBANK_API_KEY="your-drugbank-api-key"
 
 # ─────────────────────────────────────────
@@ -193,7 +196,7 @@ npm run dev
 | `SESSION_SECRET` | `lib/session.ts` | ✅ Yes |
 | `SMTP_HOST/PORT/USER/PASS/FROM` | `lib/mailer.ts` | ✅ Yes |
 | `TWILIO_*` | `lib/sms.ts` | ⚠️ Optional |
-| `DRUGBANK_API_KEY` | `lib/drugcheck.ts` | ⚠️ Optional (has fallback) |
+| `DRUGBANK_API_KEY` | `lib/drugcheck.ts` | ⚠️ Optional — the app defaults to a local 20-pair table for the MVP; external lookup only when configured |
 | `ADMIN_EMAIL/PASSWORD` | `prisma/seed.ts` | ✅ Yes (for seeding) |
 
 ---
