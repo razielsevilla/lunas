@@ -245,7 +245,7 @@ Hour 4–5:
 ### Dev C — Patient UI (Full Implementation)
 Using the real API now (not mock data).
 
-- [ ] `app/(patient)/profile/page.tsx` — full form implementation:
+- [x] `app/(patient)/profile/page.tsx` — full form implementation:
   - Basic info section (blood type dropdown, height, weight, organ donor toggle)
   - Allergies section: list + add form (allergen, reaction, severity dropdown) + delete
   - Medications section: list + add form + delete (shows drug interaction warnings inline)
@@ -253,8 +253,8 @@ Using the real API now (not mock data).
   - Emergency contacts section: list + add form + delete
   - Save button → `PUT /api/patient/profile`
   - Profile completion % display (calculate client-side based on filled fields)
-- [ ] `app/(patient)/access-logs/page.tsx` — table with professional name, PRC #, timestamp, duration, status badge
-- [ ] Wire dashboard to real `GET /api/patient/profile` data
+- [x] `app/(patient)/access-logs/page.tsx` — table with professional name, PRC #, timestamp, duration, status badge
+- [x] Wire dashboard to real `GET /api/patient/profile` data
 
 ---
 
@@ -291,11 +291,11 @@ Using the real API now (not mock data).
 ---
 
 ### Team Lead (You) — Hour 5–13
-- [ ] Continuous integration: merge PRs as they come in, resolve conflicts
-- [ ] Test the auth flow end-to-end (register → login → dashboard for all 3 roles)
-- [ ] Test the QR scan flow end-to-end as soon as Dev B's endpoint and Dev D's UI are ready
-- [ ] Keep a running list of bugs for Phase 4
-- [ ] Check in with G and H on progress
+- [x] Continuous integration: merge PRs as they come in, resolve conflicts
+- [x] Test the auth flow end-to-end (register → login → dashboard for all 3 roles)
+- [x] Test the QR scan flow end-to-end as soon as Dev B's endpoint and Dev D's UI are ready
+- [x] Keep a running list of bugs for Phase 4
+- [x] Check in with G and H on progress
 
 ### Member G (Landing Page)
 - [x] Implement landing page sections: Hero, Features, Tech Stack, Team, Demo CTA

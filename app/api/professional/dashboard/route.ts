@@ -21,7 +21,7 @@ export async function GET(req: Request): Promise<Response> {
     // Scans today: count access logs today with SUCCESS
     const scansToday = await prisma.accessLog.count({
       where: {
-        professionalId: professionalProfile.id,
+        professionalProfileId: professionalProfile.id,
         status: 'SUCCESS',
         accessedAt: {
           gte: today,
@@ -32,16 +32,16 @@ export async function GET(req: Request): Promise<Response> {
     // Patients this week: distinct patientIds accessed this week
     const patientsThisWeekResult = await prisma.accessLog.findMany({
       where: {
-        professionalId: professionalProfile.id,
+        professionalProfileId: professionalProfile.id,
         status: 'SUCCESS',
         accessedAt: {
           gte: weekAgo,
         },
       },
       select: {
-        patientId: true,
+        patientProfileId: true,
       },
-      distinct: ['patientId'],
+      distinct: ['patientProfileId'],
     });
     const patientsThisWeek = patientsThisWeekResult.length;
 
@@ -51,7 +51,7 @@ export async function GET(req: Request): Promise<Response> {
     // Recent patients: last 5 accessed patients
     const recentAccessLogs = await prisma.accessLog.findMany({
       where: {
-        professionalId: professionalProfile.id,
+        professionalProfileId: professionalProfile.id,
         status: 'SUCCESS',
       },
       orderBy: {

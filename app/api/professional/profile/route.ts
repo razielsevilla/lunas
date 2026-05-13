@@ -25,7 +25,7 @@ export async function GET(req: Request): Promise<Response> {
       prcNumber: professionalProfile.prcNumber,
       profession: professionalProfile.profession,
       specialization: professionalProfile.specialization,
-      hospitalAffiliation: professionalProfile.hospitalAffiliation,
+      hospitalAffiliation: professionalProfile.hospitalAffil,
       prcStatus: professionalProfile.prcStatus,
       pinSet: !!professionalProfile.pin,
     });
