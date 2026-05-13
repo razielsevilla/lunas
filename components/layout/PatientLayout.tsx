@@ -17,15 +17,28 @@ type NavItem = {
 };
 
 const navigation: NavItem[] = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'My Medical Profile', href: '/profile', icon: UserCircle },
-  { label: 'My QR Code', href: '/qr-code', icon: QrCode },
-  { label: 'Access Logs', href: '/access-logs', icon: History },
+  { label: 'Dashboard', href: '/patient/dashboard', icon: LayoutDashboard },
+  { label: 'My Medical Profile', href: '/patient/profile', icon: UserCircle },
+  { label: 'My QR Code', href: '/patient/qr-code', icon: QrCode },
+  { label: 'Access Logs', href: '/patient/access-logs', icon: History },
 ];
 
 export interface PatientLayoutProps {
   children: ReactNode;
   activePath?: string;
+  displayName?: string;
+  roleLabel?: string;
+  avatarInitials?: string;
+}
+
+function getInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'MS';
 }
 
 function NavigationLink({ item, active }: { item: NavItem; active: boolean }) {
@@ -47,7 +60,15 @@ function NavigationLink({ item, active }: { item: NavItem; active: boolean }) {
   );
 }
 
-export function PatientLayout({ children, activePath }: PatientLayoutProps) {
+export function PatientLayout({
+  children,
+  activePath,
+  displayName = 'Maria Santos',
+  roleLabel = 'Patient',
+  avatarInitials,
+}: PatientLayoutProps) {
+  const resolvedInitials = avatarInitials ?? getInitials(displayName);
+
   return (
     <div className="min-h-screen bg-[#fbf8f2] text-[#1a1c1e]">
       {/* Sidebar - Matching dark aesthetic from screenshot */}
@@ -88,11 +109,11 @@ export function PatientLayout({ children, activePath }: PatientLayoutProps) {
           <header className="flex items-center justify-end bg-white/50 px-8 py-4 backdrop-blur-sm">
             <div className="flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-bold text-[#1a1c1e]">Maria Santos</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Patient</p>
+                <p className="text-sm font-bold text-[#1a1c1e]">{displayName}</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">{roleLabel}</p>
               </div>
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1c1e] text-xs font-bold text-white">
-                MS
+                {resolvedInitials}
               </div>
             </div>
           </header>
