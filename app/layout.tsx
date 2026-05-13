@@ -1,11 +1,23 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Manrope } from 'next/font/google';
+import { Manrope, Inter, Playfair_Display } from 'next/font/google';
 
 const manrope = Manrope({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-manrope',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
 });
 
 export const metadata: Metadata = {
@@ -15,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={`${manrope.variable} ${inter.variable} ${playfair.variable}`}>
       <body className="bg-[#f4efe6] text-[#2d2822] antialiased">{children}</body>
     </html>
   );
