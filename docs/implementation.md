@@ -63,10 +63,10 @@ feature/landing-page      → Member G
 - [x] Initialize Prisma: `npx prisma init`
 - [x] Paste full schema from `schema.md` into `prisma/schema.prisma`
 - [x] Create `.env.example` from `ENVIRONMENT.md`
-- [ ] Create `.env` with real values (Supabase DB, Gmail SMTP, generated keys)
-- [ ] Run `npx prisma migrate dev --name init && npx prisma generate`
-- [ ] Push to GitHub. Share `.env` privately with the team (Discord DM / secure note)
-- [ ] Confirm everyone can `git clone`, `npm install`, copy `.env`, and `npm run dev`
+- [x] Create `.env` with real values (Supabase DB, Gmail SMTP, generated keys)
+- [x] Run `npx prisma migrate dev --name init && npx prisma generate`
+- [x] Push to GitHub. Share `.env` privately with the team (Discord DM / secure note)
+- [x] Confirm everyone can `git clone`, `npm install`, copy `.env`, and `npm run dev`
 
 ### All Coders (Dev A–E)
 - [ ] Clone repo
