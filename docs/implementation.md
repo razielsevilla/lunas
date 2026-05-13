@@ -324,14 +324,14 @@ Using the real API now (not mock data).
 **Connect everything. Fill gaps. No major new features.**
 
 ### Dev A
-- [ ] Finalize input validation with `zod` on all API routes
-- [ ] Add proper HTTP status codes and error messages everywhere
-- [ ] Test all patient API routes with Postman or Thunder Client
+- [x] Finalize input validation with `zod` on all API routes
+- [x] Add proper HTTP status codes and error messages everywhere
+- [x] Test all patient API routes with Postman or Thunder Client
 
 ### Dev B
-- [ ] End-to-end test the full scan flow: scan → PIN → access log created → notification sent
-- [ ] Confirm drug interaction check fires correctly on medication add/delete
-- [ ] Test the admin approve flow: approve → PIN generated → PIN emailed to professional
+- [x] End-to-end test the full scan flow: scan → PIN → access log created → notification sent
+- [x] Confirm drug interaction check fires correctly on medication add/delete
+- [x] Test the admin approve flow: approve → PIN generated → PIN emailed to professional
 
 ### Dev C
 - [ ] Polish patient profile form UX (loading states, success toasts, error messages)

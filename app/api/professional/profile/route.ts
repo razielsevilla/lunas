@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db';
-import { requireRole } from '@/lib/auth';
+import { requireRole, toAuthErrorResponse } from '@/lib/auth';
+import { HTTP } from '@/lib/api';
 
 export async function GET(req: Request): Promise<Response> {
   try {
@@ -13,7 +14,7 @@ export async function GET(req: Request): Promise<Response> {
     });
 
     if (!professionalProfile) {
-      return Response.json({ error: 'Professional profile not found.' }, { status: 404 });
+      return HTTP.notFound('Professional profile');
     }
 
     return Response.json({
@@ -29,7 +30,7 @@ export async function GET(req: Request): Promise<Response> {
       prcStatus: professionalProfile.prcStatus,
       pinSet: !!professionalProfile.pin,
     });
-  } catch (error: any) {
-    return Response.json({ error: error.message || 'Internal server error' }, { status: 500 });
+  } catch (err) {
+    return toAuthErrorResponse(err);
   }
 }
