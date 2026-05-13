@@ -17,13 +17,6 @@ export default function ProfessionalLayout({ children }: { children: React.React
       ) 
     },
     { 
-      name: 'Scan Patient QR', 
-      href: '/professional/scan', 
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect width="7" height="7" x="7" y="7" rx="1"/></svg>
-      ) 
-    },
-    { 
       name: 'Recent Patients', 
       href: '/professional/recent-patients', 
       icon: (
@@ -88,16 +81,6 @@ export default function ProfessionalLayout({ children }: { children: React.React
 
       {/* Main Content Area */}
       <main className="flex-1 ml-72">
-        <header className="h-20 bg-transparent flex items-center justify-end px-12 space-x-4">
-          <div className="text-right">
-            <p className="text-sm font-bold text-slate-900 tracking-tight">Dr. Ramon Cruz</p>
-            <span className="text-[10px] uppercase tracking-widest bg-slate-200/60 text-slate-600 px-2.5 py-1 rounded-full font-bold">Medical Expert</span>
-          </div>
-          <div className="w-10 h-10 bg-[#0F172A] rounded-full flex items-center justify-center text-white font-bold text-xs border-2 border-white shadow-sm">
-            RC
-          </div>
-        </header>
-        
         <div className="p-12 max-w-6xl mx-auto">
           {children}
         </div>
