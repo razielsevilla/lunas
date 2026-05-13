@@ -259,13 +259,13 @@ Using the real API now (not mock data).
 ---
 
 ### Dev D — Professional UI (Full Implementation)
-- [ ] `app/scan/[uuid]/page.tsx` — full PIN entry page:
+- [x] `app/scan/[uuid]/page.tsx` — full PIN entry page:
   - Show patient first name ("Accessing medical passport of Maria")
   - 6-dot PIN input (masked)
   - Submit → `POST /api/scan/access`
   - Show attempt count / lockout message
   - On success → redirect to emergency view with patient data in state (or query param token)
-- [ ] `app/(professional)/emergency-view/page.tsx` — the emergency patient view:
+- [x] `app/(professional)/emergency-view/page.tsx` — the emergency patient view:
   - Dark/high-contrast mode
   - Header: patient name, age, blood type, organ donor status
   - Allergies list (life-threatening shown in RED with bold text)
@@ -273,20 +273,20 @@ Using the real API now (not mock data).
   - Drug interactions section (HIGH severity in red, MODERATE in yellow)
   - Surgeries/history
   - Footer: "EMERGENCY VIEW — ACCESS LOGGED — CONTACTS NOTIFIED"
-- [ ] `app/(professional)/dashboard/page.tsx` — wire to `GET /api/professional/dashboard`
-- [ ] `app/(professional)/profile/page.tsx` — wire to `GET /api/professional/profile`
+- [x] `app/(professional)/dashboard/page.tsx` — wire to `GET /api/professional/dashboard`
+- [x] `app/(professional)/profile/page.tsx` — wire to `GET /api/professional/profile`
 
 ---
 
 ### Dev E — Admin UI (Full Implementation)
-- [ ] `app/(admin)/overview/page.tsx` — wire to `GET /api/admin/overview`
-- [ ] `app/(admin)/verifications/page.tsx` — wire to `GET /api/admin/verifications`:
+- [x] `app/(admin)/overview/page.tsx` — wire to `GET /api/admin/overview`
+- [x] `app/(admin)/verifications/page.tsx` — wire to `GET /api/admin/verifications`:
   - Table with professional name, PRC #, profession, submitted date
   - Approve → `POST /api/admin/verifications/:id/approve` → success toast → refresh
   - Reject → modal with reason → `POST /api/admin/verifications/:id/reject`
-- [ ] `app/(admin)/users/page.tsx` — wire to `GET /api/admin/users`
-- [ ] `app/(admin)/audit-logs/page.tsx` — wire to `GET /api/admin/audit-logs`
-- [ ] `app/(admin)/system-health/page.tsx` — wire to `GET /api/admin/system-health`, show service status cards
+- [x] `app/(admin)/users/page.tsx` — wire to `GET /api/admin/users`
+- [x] `app/(admin)/audit-logs/page.tsx` — wire to `GET /api/admin/audit-logs`
+- [x] `app/(admin)/system-health/page.tsx` — wire to `GET /api/admin/system-health`, show service status cards
 
 ---
 
@@ -298,13 +298,13 @@ Using the real API now (not mock data).
 - [ ] Check in with G and H on progress
 
 ### Member G (Landing Page)
-- [ ] Implement landing page sections: Hero, Features, Tech Stack, Team, Demo CTA
-- [ ] Ensure responsive and accessible design; include screenshots and a quick demo GIF
-- [ ] Add a simple contact/demo signup form (placeholder) and SEO/meta tags
+- [x] Implement landing page sections: Hero, Features, Tech Stack, Team, Demo CTA
+- [x] Ensure responsive and accessible design; include screenshots and a quick demo GIF
+- [x] Add a simple contact/demo signup form (placeholder) and SEO/meta tags
 
 ### Member H (Design QA + Demo Prep, no device)
-- [ ] Pair with Dev D — guide the emergency view UI for high-stress readability (font size, contrast, info hierarchy)
-- [ ] Build the demo slide deck:
+- [x] Pair with Dev D — guide the emergency view UI for high-stress readability (font size, contrast, info hierarchy)
+- [x] Build the demo slide deck:
   - Slide 1: Team name + tagline
   - Slide 2: The Problem (statistics from rationale)
   - Slide 3: The Solution — Lunas overview
@@ -314,7 +314,7 @@ Using the real API now (not mock data).
   - Slide 7: Security & compliance
   - Slide 8: Live demo (placeholder — "DEMO HERE")
   - Slide 9: Team + contact
-- [ ] Write the live demo script (step-by-step narrator guide for the demo segment)
+- [x] Write the live demo script (step-by-step narrator guide for the demo segment)
 
 ---
 

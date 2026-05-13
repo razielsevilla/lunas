@@ -287,9 +287,10 @@ export default function HomePage() {
                     type="email"
                     placeholder="you@email.com"
                     className="w-full rounded-xl border border-border bg-ivory px-4 py-2.5 text-sm text-night placeholder-muted-foreground/50 outline-none transition-colors focus:border-golden/30 focus:ring-1 focus:ring-golden/20"
+                    suppressHydrationWarning
                   />
                 </div>
-                <button className="inline-flex items-center gap-2 rounded-xl bg-night px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-glow">
+                <button className="inline-flex items-center gap-2 rounded-xl bg-night px-5 py-2.5 text-sm font-semibold text-white transition-all hover:shadow-glow" suppressHydrationWarning>
                   Subscribe
                   <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
                 </button>

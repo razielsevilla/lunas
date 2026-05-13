@@ -141,6 +141,7 @@ export function HowItWorks() {
                   <button
                     type="button"
                     onClick={() => setActiveTab(index)}
+                    suppressHydrationWarning
                     className={`group relative z-20 w-full rounded-3xl border p-7 text-left transition-all duration-700 cursor-pointer ${activeTab === index
                       ? "bg-white border-golden/40 shadow-soft-xl scale-[1.02] ring-1 ring-golden/10"
                       : "bg-transparent border-border hover:border-golden/30 hover:bg-white/60 hover:shadow-soft"
