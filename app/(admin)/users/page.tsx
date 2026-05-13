@@ -77,7 +77,7 @@ export default function UsersPage() {
         </header>
 
         {/* The Data Table */}
-        <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
+        <div className="mt-8 rounded-2xl border border-neutral-200 bg-white overflow-hidden">
           <Table
             columns={columns}
             data={users}
