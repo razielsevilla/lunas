@@ -22,25 +22,25 @@ export default function SystemHealthPage() {
         </header>
 
         {/* Service Health Grid */}
-        <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {services.map((service) => (
             <article
               key={service.name}
-              className="relative rounded-3xl border border-neutral-200 bg-white px-5 py-5"
+              className="rounded-[22px] border border-neutral-200 bg-white px-5 py-5"
             >
-              <div className="absolute right-5 top-5 inline-flex items-center gap-1.5 rounded-full bg-[#dce9de] px-3 py-1 text-[18px] font-medium text-[#0D152B]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#6aa487]" />
-                Operational
-              </div>
-
-              <div className="pr-28">
-                <h2 className="font-serif text-[36px] font-bold leading-none text-[#0D152B]">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="font-serif text-[1.50rem] font-bold leading-none text-[#0D152B]">
                   {service.name}
                 </h2>
-                <p className="mt-3 font-sans text-[24px] text-[#2d3f5f]">
-                  {service.metric}
-                </p>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#dce9de] px-3 py-1 text-xs font-medium leading-none text-[#0D152B]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#6aa487]" />
+                  Operational
+                </span>
               </div>
+
+              <p className="mt-3 font-sans text-[13px] text-[#2d3f5f]">
+                {service.metric}
+              </p>
             </article>
           ))}
         </div>
