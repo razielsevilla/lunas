@@ -47,6 +47,9 @@ const config: Config = {
       borderRadius: {
         '4xl': '2rem',
       },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite',
+      },
     },
   },
   plugins: [],

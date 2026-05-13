@@ -8,13 +8,12 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { ScrollRevealFeatures } from "@/components/ScrollRevealFeatures";
 import { ProblemSolution } from "@/components/ProblemSolution";
+import { HowItWorks } from "@/components/HowItWorks";
+import { FAQTestimonials } from "@/components/FAQTestimonials";
 import {
   Mail,
   ArrowRight,
   MapPin,
-  UserPlus,
-  QrCode,
-  ShieldCheck,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -22,31 +21,6 @@ export const metadata: Metadata = {
   description:
     "Lunas is a secure medical passport that gives first responders the right information at the right moment — through a single QR code.",
 };
-
-/* ────────────────────────────────────────────── */
-/*  Data                                          */
-/* ────────────────────────────────────────────── */
-
-const steps = [
-  {
-    icon: UserPlus,
-    title: "Build your profile",
-    body: "Sign up and complete your encrypted medical record in a guided builder.",
-    tag: "Setup",
-  },
-  {
-    icon: QrCode,
-    title: "Carry your QR code",
-    body: "Save it to your phone, print it on a card, or laminate it for your wallet.",
-    tag: "Carry",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Be safe in an emergency",
-    body: "Verified responders scan, enter their PIN, and treat you with full context.",
-    tag: "Protect",
-  },
-] as const;
 
 /* ────────────────────────────────────────────── */
 /*  Pill Component                                */
@@ -89,22 +63,22 @@ export default function HomePage() {
         <Logo variant="light" />
         <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
           <a
-            href="#why"
-            className="transition-colors hover:text-foreground"
-          >
-            Why Lunas
-          </a>
-          <a
             href="#features"
             className="transition-colors hover:text-foreground"
           >
             Features
           </a>
+          <a
+            href="#why"
+            className="transition-colors hover:text-foreground"
+          >
+            Why Lunas
+          </a>
           <a href="#how" className="transition-colors hover:text-foreground">
-            How it works
+            How it Works
           </a>
           <a href="#trust" className="transition-colors hover:text-foreground">
-            Trust &amp; security
+            Trust &amp; Security
           </a>
         </nav>
         <div className="flex items-center gap-3">
@@ -135,7 +109,7 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground text-balance">
-              Lunas turns critical health information into a permanent QR code
+              <span style={{ color: '#CFA157' }} className="font-semibold">Lunas</span> turns critical health information into a permanent QR code
               only verified medical professionals can read — so the people who
               treat you in an emergency see what matters in seconds.
             </p>
@@ -164,7 +138,7 @@ export default function HomePage() {
             <div className="absolute -inset-6 rounded-[3rem] bg-gradient-to-tr from-night/10 via-transparent to-amber-glow/10 blur-2xl" />
 
             {/* Emergency View Card — Glassmorphism */}
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-night p-8 text-moonlight shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-night p-8 text-moonlight shadow-[0_0_20px_rgba(255,255,255,0.05)] transition-all duration-700 hover:scale-[1.02] hover:shadow-glow/20">
               {/* Subtle inner glass highlights */}
               <div className="pointer-events-none absolute -right-20 -top-20 h-40 w-40 rounded-full bg-golden/5 blur-3xl" />
               <div className="pointer-events-none absolute -bottom-16 -left-16 h-32 w-32 rounded-full bg-amber-glow/5 blur-2xl" />
@@ -211,103 +185,42 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══════════════ PROBLEM & SOLUTION ═══════════════ */}
-      <ProblemSolution />
-
       {/* ═══════════════ FEATURES ═══════════════ */}
       <ScrollRevealFeatures />
 
+      {/* ═══════════════ PROBLEM & SOLUTION ═══════════════ */}
+      <ProblemSolution />
+
       {/* ═══════════════ HOW IT WORKS ═══════════════ */}
-      <section id="how" className="bg-ivory">
-        <div className="mx-auto max-w-6xl px-6 py-24">
-          {/* Section heading */}
-          <div className="mb-16 flex flex-col items-start text-left">
-            <h2 className="font-display text-4xl font-bold leading-[1.05] tracking-tighter text-night sm:text-5xl md:text-6xl lg:text-7xl">
-              How it works
-            </h2>
-            <p
-              className="mt-2 font-display text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, #C49A6C 0%, #D4A44E 50%, #C8956C 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              in three simple steps.
-            </p>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              From sign-up to life-saving scan — Lunas is designed to be
-              effortless for you and instant for the people who help you.
-            </p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {steps.map((s, i) => (
-              <div key={s.title}>
-                <div className="group relative h-full overflow-hidden rounded-3xl border border-border/50 bg-white transition-all duration-500 hover:border-golden/25 hover:shadow-soft-lg hover:-translate-y-1">
-                  {/* Top accent bar */}
-                  <div className="h-1 w-full bg-gradient-to-r from-golden/50 via-amber-glow/30 to-transparent" />
-
-                  <div className="p-7">
-                    {/* Tag + Number row */}
-                    <div className="flex items-center justify-between">
-                      <span className="rounded-full border border-golden/15 bg-golden/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-golden">
-                        {s.tag}
-                      </span>
-                      <span className="font-display text-3xl font-bold tracking-tighter text-night/[0.06]">
-                        0{i + 1}
-                      </span>
-                    </div>
-
-                    {/* Icon */}
-                    <div className="mt-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-border/40 bg-gradient-to-br from-ivory to-ivory-warm shadow-sm transition-all duration-300 group-hover:border-golden/20 group-hover:shadow-glow">
-                      <s.icon
-                        className="h-6 w-6 text-night/50 transition-colors duration-300 group-hover:text-golden"
-                        strokeWidth={1.4}
-                      />
-                    </div>
-
-                    {/* Text content */}
-                    <h3 className="mt-5 font-display text-xl font-semibold tracking-tight text-night">
-                      {s.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {s.body}
-                    </p>
-
-                    {/* Bottom decorative element */}
-                    <div className="mt-6 flex items-center gap-3">
-                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent transition-all duration-500 group-hover:from-golden/30" />
-                      <div className="h-1.5 w-1.5 rounded-full bg-border transition-colors duration-500 group-hover:bg-golden/50" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HowItWorks />
+      <FAQTestimonials />
 
       {/* ═══════════════ TRUST ═══════════════ */}
-      <section id="trust" className="bg-night text-moonlight">
-        <div className="mx-auto max-w-6xl px-6 py-24 text-center">
-          <h2 className="mx-auto max-w-3xl font-display text-4xl font-semibold tracking-tighter md:text-5xl text-balance">
-            Privacy isn&apos;t a feature.
-            <br />It&apos;s the foundation.
-          </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-moonlight/50">
-            Every record is AES-256 encrypted. Access requires a 6-digit
-            professional PIN. Every scan is logged and your emergency contacts
-            are notified the moment anyone opens your record.
-          </p>
-          <Link
-            href="/register"
-            className="mt-12 inline-flex rounded-full bg-amber-glow px-7 py-3.5 text-sm font-semibold text-night transition-all hover:shadow-moon"
-          >
-            Create your free passport
-          </Link>
+      <section id="trust" className="relative overflow-hidden bg-night py-32 text-moonlight">
+        {/* Decorative background effects */}
+        <div className="pointer-events-none absolute -top-40 right-1/4 h-96 w-96 rounded-full bg-golden/[0.03] blur-[120px]" />
+        <div className="pointer-events-none absolute -bottom-20 left-1/4 h-80 w-80 rounded-full bg-amber-glow/[0.02] blur-[100px]" />
+
+        <div className="relative mx-auto max-w-6xl px-6">
+          <div className="mb-20 text-center">
+            <h2 className="mx-auto max-w-3xl font-display text-4xl font-bold tracking-tighter md:text-6xl text-balance">
+              Privacy isn&apos;t a feature.
+              <br /><span className="text-golden italic">It&apos;s the foundation.</span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-moonlight/40 leading-relaxed">
+              Every design decision we make starts with your data sovereignty.
+              We use the same standards as global financial institutions.
+            </p>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/register"
+              className="inline-flex rounded-full bg-golden px-8 py-4 text-sm font-semibold text-night transition-all hover:shadow-moon hover:scale-105"
+            >
+              Create your free passport
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -349,6 +262,11 @@ export default function HomePage() {
                   <li>
                     <a href="#features" className="transition-colors hover:text-golden">
                       Features
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#why" className="transition-colors hover:text-golden">
+                      Why Lunas
                     </a>
                   </li>
                   <li>

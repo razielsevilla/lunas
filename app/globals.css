@@ -32,4 +32,22 @@ a {
   .text-balance {
     text-wrap: balance;
   }
+
+  @keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  @keyframes qr-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+  }
+
+  .group-hover\:animate-qr-breathe {
+    animation: qr-breathe 2s ease-in-out infinite;
+  }
 }
