@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
+import LunasLoader from '@/components/ui/loader';
 import type { TableColumn } from '@/components/ui/Table';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import type { StatusVariant } from '@/components/ui/StatusBadge';
@@ -191,9 +192,8 @@ export default function UsersPage() {
 
         {/* Loading */}
         {loading && (
-          <div className="flex items-center justify-center gap-3 py-20">
-            <Loader2 className="h-5 w-5 animate-spin text-[#6B7FA3]" />
-            <span className="font-sans text-sm text-[#6B7FA3]">Loading users…</span>
+          <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-2xl">
+            <LunasLoader />
           </div>
         )}
 

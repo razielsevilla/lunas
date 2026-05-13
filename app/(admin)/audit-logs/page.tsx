@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
+import LunasLoader from '@/components/ui/loader';
 
 // ---------------------------------------------------------------------------
 // Types matching GET /api/admin/audit-logs response
@@ -102,9 +103,8 @@ export default function AuditLogsPage() {
 
         {/* Loading State */}
         {loading && (
-          <div className="flex items-center justify-center gap-3 py-16">
-            <Loader2 className="h-5 w-5 animate-spin text-[#8E919A]" />
-            <span className="font-sans text-sm text-[#8E919A]">Loading audit logs…</span>
+          <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-[24px]">
+            <LunasLoader />
           </div>
         )}
 

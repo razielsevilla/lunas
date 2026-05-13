@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { Activity, ShieldAlert, Loader2 } from 'lucide-react';
+import LunasLoader from '@/components/ui/loader';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -114,9 +115,8 @@ export default function OverviewPage() {
 
         {/* Loading */}
         {loading && (
-          <div className="flex items-center justify-center gap-3 py-20">
-            <Loader2 className="h-5 w-5 animate-spin text-[#6B7FA3]" />
-            <span className="font-sans text-sm text-[#6B7FA3]">Loading dashboard…</span>
+          <div className="flex h-[400px] w-full items-center justify-center overflow-hidden rounded-2xl">
+            <LunasLoader />
           </div>
         )}
 
