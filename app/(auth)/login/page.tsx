@@ -57,7 +57,7 @@ export default function LoginPage() {
       } else if (data.role === "PROFESSIONAL") {
         router.push("/professional/dashboard");
       } else {
-        router.push("/admin/overview");
+        router.push("/overview");
       }
       
     } catch (err: any) {
