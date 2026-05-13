@@ -3,6 +3,7 @@ import { Activity, ClipboardList, LayoutDashboard, ShieldCheck, Sparkles, Users,
 import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/cn';
+import { LogoutButton } from '@/components/ui/LogoutButton';
 
 type NavItem = {
   label: string;
@@ -61,6 +62,11 @@ export function AdminLayout({ children, activePath }: AdminLayoutProps) {
             <NavigationLink key={item.href} item={item} active={activePath ? activePath === item.href : false} />
           ))}
         </nav>
+
+        {/* Logout */}
+        <div className="mt-auto border-t border-neutral-200 pt-4 mb-4">
+          <LogoutButton className="text-[#7d7264] hover:text-[#2d2822] [&_svg]:text-[#9b9081] [&_svg]:hover:text-[#2d2822]" />
+        </div>
 
         <div className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-[0_18px_48px_rgba(51,43,34,0.05)]">
           <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[#8d8374]">Workspace</p>
