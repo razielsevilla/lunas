@@ -1,10 +1,32 @@
+# Next.js build output
 .next
+out
+
+# Dependencies
 node_modules
+
+# Environment variables — never commit secrets
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+
+# TypeScript incremental build cache — machine-specific, no value in VCS
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Test coverage & build artifacts
 coverage
 dist
+
+# Logs
 *.log
+npm-debug.log*
+
+# Prisma generated client (regenerated from schema on each install)
+prisma/generated
+
+# OS artifacts
+.DS_Store
+Thumbs.db
