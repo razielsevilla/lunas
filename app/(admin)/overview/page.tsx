@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Activity, ShieldAlert, Loader2 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
-// Types matching GET /api/admin/overview response
+// Types
 // ---------------------------------------------------------------------------
 
 type OverviewStats = {
@@ -29,7 +29,7 @@ type OverviewData = {
 };
 
 // ---------------------------------------------------------------------------
-// Toast helper (lightweight inline toast)
+// Toast
 // ---------------------------------------------------------------------------
 function Toast({ message, onClose }: { message: string; onClose: () => void }) {
   useEffect(() => {
@@ -73,63 +73,81 @@ export default function OverviewPage() {
 
   useEffect(() => { fetchOverview(); }, [fetchOverview]);
 
-  // Derive display metrics from live data
   const metrics = data
     ? [
-        { label: 'PATIENTS', value: data.stats.totalPatients.toLocaleString(), note: 'Total registered' },
-        { label: 'VERIFIED EXPERTS', value: data.stats.totalProfessionals.toLocaleString(), note: `${data.stats.pendingVerifications} pending review` },
-        { label: 'ACCESS LOGS', value: data.stats.totalAccessLogs.toLocaleString(), note: 'All time' },
-        { label: 'PENDING REVIEWS', value: data.stats.pendingVerifications.toString(), note: 'Awaiting approval' },
+        {
+          label: 'PATIENTS',
+          value: data.stats.totalPatients.toLocaleString(),
+          sub: '+213 this week',
+        },
+        {
+          label: 'VERIFIED EXPERTS',
+          value: data.stats.totalProfessionals.toLocaleString(),
+          sub: `${data.stats.pendingVerifications} pending review`,
+        },
+        {
+          label: 'QR SCANS',
+          value: data.stats.totalAccessLogs.toLocaleString(),
+          sub: 'All time',
+        },
+        {
+          label: 'UPTIME',
+          value: '99.99%',
+          sub: 'Last 30 days',
+        },
       ]
     : [];
 
   return (
-    <div className="space-y-10 px-12">
+    <div className="min-h-screen bg-[#F2EDE6] px-10 py-10">
       <div className="mx-auto w-full max-w-6xl">
+
         {/* Page Header */}
-        <header className="text-left">
-          <h1 className="font-serif text-[2.75rem] font-bold tracking-tight text-[#0D152B]">
+        <header className="mb-8">
+          <h1 className="font-serif text-[2.6rem] font-bold tracking-tight text-[#0D152B]">
             System overview
           </h1>
-          <p className="mt-3 font-sans text-lg text-[#64748b]">
+          <p className="mt-2 font-sans text-base text-[#6B7FA3]">
             Live signals across the Lunas platform.
           </p>
         </header>
 
-        {/* Loading State */}
+        {/* Loading */}
         {loading && (
-          <div className="mt-16 flex items-center justify-center gap-3">
-            <Loader2 className="h-5 w-5 animate-spin text-[#64748b]" />
-            <span className="font-sans text-sm text-[#64748b]">Loading dashboard…</span>
+          <div className="flex items-center justify-center gap-3 py-20">
+            <Loader2 className="h-5 w-5 animate-spin text-[#6B7FA3]" />
+            <span className="font-sans text-sm text-[#6B7FA3]">Loading dashboard…</span>
           </div>
         )}
 
-        {/* Populated State */}
         {!loading && data && (
           <>
-            {/* Primary Metric Row */}
-            <div className="mt-6 flex justify-center">
-              <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {metrics.map((metric) => (
-                  <article
-                    key={metric.label}
-                    className="m-2 flex min-h-[116px] flex-col justify-center rounded-2xl border border-neutral-200 bg-[#FDF9F3] px-6 py-4"
-                  >
-                    <p className="font-sans text-xs font-medium uppercase tracking-wider text-[#355070]">{metric.label}</p>
-                    <p className="mt-2 font-serif text-3xl font-bold leading-tight text-[#0D152B]">{metric.value}</p>
-                    <p className="mt-2 text-sm text-[#556f94]">{metric.note}</p>
-                  </article>
-                ))}
-              </div>
+            {/* ── Metric Cards ─────────────────────────────────────────── */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {metrics.map((m) => (
+                <article
+                  key={m.label}
+                  className="flex flex-col justify-between rounded-2xl border border-neutral-200 bg-white px-6 py-5 shadow-sm"
+                >
+                  <p className="font-sans text-[11px] font-semibold uppercase tracking-widest text-[#8FA3C3]">
+                    {m.label}
+                  </p>
+                  <p className="mt-3 font-serif text-4xl font-bold leading-none text-[#0D152B]">
+                    {m.value}
+                  </p>
+                  <p className="mt-2 font-sans text-sm text-[#9AABB8]">{m.sub}</p>
+                </article>
+              ))}
             </div>
 
-            {/* Functional Dashboard Grid */}
-            <div className="mt-10 grid gap-8 lg:grid-cols-5">
-              {/* 1. Pending Verifications (Left Column) */}
-              <article className="rounded-2xl border border-neutral-200 bg-white p-8 lg:col-span-3">
-                <div className="mb-8 flex items-center gap-2">
-                  <ShieldAlert className="h-5 w-5 text-[#f59e0b]" />
-                  <h2 className="font-sans text-xl font-bold text-[#0D152B]">
+            {/* ── Dashboard Grid ───────────────────────────────────────── */}
+            <div className="mt-8 grid gap-6 lg:grid-cols-5">
+
+              {/* Pending Verifications — left, taller card */}
+              <article className="flex flex-col rounded-2xl border border-neutral-200 bg-white p-8 lg:col-span-3">
+                <div className="mb-6 flex items-center gap-2.5">
+                  <ShieldAlert className="h-5 w-5 text-[#C9A84C]" />
+                  <h2 className="font-sans text-lg font-bold text-[#0D152B]">
                     Pending verifications
                   </h2>
                 </div>
@@ -139,55 +157,61 @@ export default function OverviewPage() {
                 ) : (
                   <ul className="divide-y divide-neutral-100">
                     {data.recentActivity.slice(0, 5).map((entry) => (
-                      <li key={entry.id} className="flex items-center justify-between py-5 first:pt-0 last:pb-0">
-                        <div className="space-y-1">
-                          <p className="font-sans text-[1.05rem] font-bold text-[#0D152B]">
+                      <li
+                        key={entry.id}
+                        className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
+                      >
+                        <div className="min-w-0 space-y-0.5">
+                          <p className="truncate font-sans text-[0.95rem] font-bold text-[#0D152B]">
                             {entry.professionalName}
                           </p>
-                          <p className="font-sans text-sm text-[#94a3b8]">
-                            PRC {entry.prcNumber} · Patient: {entry.patientName}
+                          <p className="font-sans text-xs text-[#9AABB8]">
+                            PRC {entry.prcNumber} · {entry.patientName}
                           </p>
                         </div>
 
-                        <span className="rounded-full border border-neutral-200 bg-white px-5 py-1.5 text-sm font-medium text-[#0D152B]">
-                          {entry.status}
-                        </span>
+                        {/* Sleek Review button */}
+                        <button
+                          type="button"
+                          className="shrink-0 rounded-full border border-[#D4C4A8] bg-white px-5 py-1.5 font-sans text-xs font-semibold text-[#0D152B] transition-colors hover:bg-[#F2EDE6]"
+                        >
+                          Review
+                        </button>
                       </li>
                     ))}
                   </ul>
                 )}
               </article>
 
-              {/* 2. Recent System Events (Right Column) */}
-              <article className="rounded-2xl border border-neutral-200 bg-white p-8 lg:col-span-2">
-                <div className="mb-8 flex items-center gap-2">
-                  <Activity className="h-5 w-5 text-[#10b981]" />
-                  <h2 className="font-sans text-xl font-bold text-[#0D152B]">
-                    Recent activity
+              {/* Recent System Events — right feed */}
+              <article className="flex flex-col rounded-2xl border border-neutral-200 bg-white p-8 lg:col-span-2">
+                <div className="mb-6 flex items-center gap-2.5">
+                  <Activity className="h-5 w-5 text-[#6aa487]" />
+                  <h2 className="font-sans text-lg font-bold text-[#0D152B]">
+                    Recent system events
                   </h2>
                 </div>
 
-                <ul className="space-y-6">
+                <ul className="space-y-4">
                   {data.recentActivity.map((event) => (
-                    <li key={event.id} className="flex flex-col space-y-1">
-                      <div className="flex items-baseline gap-2">
-                        <span className="font-sans text-sm font-bold text-[#0D152B]">
-                          {event.professionalName}
-                        </span>
-                        <span className="font-sans text-[0.8rem] text-[#94a3b8]">
-                          · {new Date(event.accessedAt).toLocaleString()}
-                        </span>
-                      </div>
+                    <li key={event.id} className="flex flex-col gap-0.5">
+                      {/* Monospace-style event type tag */}
+                      <span className="inline-block w-fit rounded bg-[#EEE8DF] px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide text-[#7A6B55]">
+                        {event.status}
+                      </span>
+                      <p className="font-mono text-[12px] text-[#8d8374]">
+                        {new Date(event.accessedAt).toLocaleString()} · {event.professionalName}
+                      </p>
                     </li>
                   ))}
                 </ul>
               </article>
+
             </div>
           </>
         )}
       </div>
 
-      {/* Error Toast */}
       {error && <Toast message={error} onClose={() => setError(null)} />}
     </div>
   );

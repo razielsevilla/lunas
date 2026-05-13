@@ -88,14 +88,14 @@ export default function AuditLogsPage() {
   useEffect(() => { fetchLogs(page); }, [fetchLogs, page]);
 
   return (
-    <div className="space-y-8 px-12">
+    <div className="min-h-screen bg-[#FAF7F2] px-12 py-12">
       <div className="mx-auto w-full max-w-6xl">
         {/* Page Header */}
-        <header className="text-left">
-          <h1 className="font-serif text-[2.75rem] font-bold tracking-tight text-[#0D152B]">
+        <header className="mb-12 text-left">
+          <h1 className="font-serif text-[2.75rem] font-bold tracking-tight text-[#0C0E14]">
             Audit logs
           </h1>
-          <p className="mt-3 font-sans text-lg text-[#64748b]">
+          <p className="mt-2 font-sans text-lg text-[#8E919A]">
             Every privileged action, signed and timestamped.
           </p>
         </header>
@@ -103,35 +103,34 @@ export default function AuditLogsPage() {
         {/* Loading State */}
         {loading && (
           <div className="flex items-center justify-center gap-3 py-16">
-            <Loader2 className="h-5 w-5 animate-spin text-[#64748b]" />
-            <span className="font-sans text-sm text-[#64748b]">Loading audit logs…</span>
+            <Loader2 className="h-5 w-5 animate-spin text-[#8E919A]" />
+            <span className="font-sans text-sm text-[#8E919A]">Loading audit logs…</span>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && logs.length === 0 && (
-          <div className="mt-8 rounded-2xl border border-neutral-200 bg-white px-8 py-16 text-center">
-            <p className="font-sans text-sm text-[#94a3b8]">No audit logs recorded yet.</p>
+          <div className="mt-8 rounded-[24px] border border-[#1A1D26]/10 bg-white px-8 py-16 text-center shadow-sm">
+            <p className="font-sans text-sm text-[#8E919A]">No audit logs recorded yet.</p>
           </div>
         )}
 
         {/* Log Entry Feed */}
         {!loading && logs.length > 0 && (
           <>
-            <div className="mt-8 flex flex-col gap-3">
+            <div className="flex flex-col gap-3">
               {logs.map((log) => (
                 <div
                   key={log.id}
-                  className="rounded-2xl border border-neutral-200 bg-white/70 px-5 py-2.5"
+                  className="flex w-full items-center rounded-full border border-neutral-100 bg-white px-6 py-4 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <p className="font-mono text-[18px] leading-tight tracking-tight text-[#355070]">
-                    <span className="mr-3">{formatTimestamp(log.createdAt)}</span>
-                    <span className="mr-2 inline-block rounded bg-[#f0ebdf] px-2 py-0.5 text-[14px] font-bold text-[#7f715b]">
-                      {log.eventType}
-                    </span>
-                    <span className="text-[#8d8374]">
-                      actor={log.actorId.slice(0, 8)}
-                      {log.targetId && ` target=${log.targetId.slice(0, 8)}`}
+                  {/* Monospace Records & Visual Muting */}
+                  <p className="truncate font-mono text-[14px] text-[#64748b]">
+                    <span className="mr-6 inline-block w-[160px]">{formatTimestamp(log.createdAt)}</span>
+                    <span className="mr-6 inline-block w-[150px] font-medium text-[#0C0E14]">{log.eventType}</span>
+                    <span className="tracking-tight">
+                      actor={log.actorId}
+                      {log.targetId && ` target=${log.targetId}`}
                       {log.metadata && ` ${formatMetadata(log.metadata)}`}
                     </span>
                   </p>
@@ -141,23 +140,23 @@ export default function AuditLogsPage() {
 
             {/* Pagination */}
             {pagination && pagination.pages > 1 && (
-              <div className="mt-6 flex items-center justify-center gap-4">
+              <div className="mt-10 flex items-center justify-center gap-4">
                 <button
                   type="button"
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
-                  className="rounded-full border border-neutral-200 bg-white px-5 py-2 text-sm font-medium text-[#0D152B] transition-colors hover:bg-neutral-50 disabled:opacity-40"
+                  className="rounded-full border border-neutral-200 bg-white px-6 py-2.5 text-sm font-medium text-[#0C0E14] transition-colors hover:bg-neutral-50 disabled:opacity-40"
                 >
                   Previous
                 </button>
-                <span className="font-sans text-sm text-[#64748b]">
+                <span className="font-sans text-sm text-[#8E919A]">
                   Page {pagination.page} of {pagination.pages}
                 </span>
                 <button
                   type="button"
                   disabled={page >= pagination.pages}
                   onClick={() => setPage((p) => p + 1)}
-                  className="rounded-full border border-neutral-200 bg-white px-5 py-2 text-sm font-medium text-[#0D152B] transition-colors hover:bg-neutral-50 disabled:opacity-40"
+                  className="rounded-full border border-neutral-200 bg-white px-6 py-2.5 text-sm font-medium text-[#0C0E14] transition-colors hover:bg-neutral-50 disabled:opacity-40"
                 >
                   Next
                 </button>
