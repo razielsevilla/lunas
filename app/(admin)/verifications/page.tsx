@@ -1,3 +1,5 @@
+"use client";
+
 const verifications = [
   { name: 'Dr. Andrea Lim', title: 'Cardiologist', prcId: '#0091223' },
   { name: 'Nurse Karl Vergara', title: 'Registered Nurse', prcId: '#0144812' },
@@ -19,7 +21,7 @@ export default function VerificationsPage() {
         </header>
 
         {/* Verification Request Cards Stack */}
-        <div className="space-y-6">
+        <div className="space-y-3">
           {verifications.map((item) => (
             <article
               key={item.prcId}
