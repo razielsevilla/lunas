@@ -10,16 +10,11 @@ import { ScrollRevealFeatures } from "@/components/ScrollRevealFeatures";
 import { ProblemSolution } from "@/components/ProblemSolution";
 import { HowItWorks } from "@/components/HowItWorks";
 import { FAQTestimonials } from "@/components/FAQTestimonials";
+import { Hero } from "@/components/Hero";
 import {
   Mail,
   ArrowRight,
   MapPin,
-  Activity,
-  AlertCircle,
-  ShieldAlert,
-  Pill as PillIcon,
-  Heart,
-  User,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -27,50 +22,6 @@ export const metadata: Metadata = {
   description:
     "Lunas is a secure medical passport that gives first responders the right information at the right moment — through a single QR code.",
 };
-
-/* ────────────────────────────────────────────── */
-/*  Pill Component                                */
-/* ────────────────────────────────────────────── */
-
-function MedicalTile({
-  icon: Icon,
-  label,
-  value,
-  tone,
-}: {
-  icon: any;
-  label: string;
-  value: string;
-  tone: "ok" | "warn" | "danger";
-}) {
-  const toneColor =
-    tone === "danger"
-      ? "text-destructive"
-      : tone === "warn"
-        ? "text-amber-warm"
-        : "text-sage";
-
-  const toneBg =
-    tone === "danger"
-      ? "bg-destructive/10 border-destructive/20"
-      : tone === "warn"
-        ? "bg-amber-warm/10 border-amber-warm/20"
-        : "bg-sage/10 border-sage/20";
-
-  return (
-    <div className={`flex items-start gap-4 rounded-2xl border p-4 transition-all duration-300 hover:bg-white/5 hover:translate-y-[-2px] ${toneBg}`}>
-      <div className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-xl bg-night/40 backdrop-blur-sm border border-white/5`}>
-        <Icon className={`h-4 w-4 ${toneColor}`} />
-      </div>
-      <div>
-        <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-moonlight/30">
-          {label}
-        </div>
-        <div className="mt-0.5 text-sm font-semibold text-moonlight/90">{value}</div>
-      </div>
-    </div>
-  );
-}
 
 /* ────────────────────────────────────────────── */
 /*  Page                                          */
@@ -119,169 +70,7 @@ export default function HomePage() {
       </header>
 
       {/* ═══════════════ HERO ═══════════════ */}
-      <section className="mx-auto max-w-6xl px-6 pb-28 pt-4">
-        <div className="grid items-center gap-16 md:grid-cols-[1.1fr_0.9fr]">
-          {/* Left — Copy */}
-          <div>
-
-            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-tighter text-night md:text-7xl text-balance">
-              Your medical passport,{" "}
-              <em className="text-night/70">always with you.</em>
-            </h1>
-
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground text-balance">
-              <span style={{ color: '#CFA157' }} className="font-semibold">Lunas</span> turns critical health information into a permanent QR code
-              only verified medical professionals can read — so the people who
-              treat you in an emergency see what matters in seconds.
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                href="/register"
-                className="rounded-full bg-night px-7 py-3.5 text-sm font-semibold text-white transition-all hover:shadow-glow"
-              >
-                Create your passport
-              </Link>
-              <Link
-                href="/scan/demo-mp-2026-00428"
-                className="rounded-full border border-border bg-white px-7 py-3.5 text-sm font-semibold text-night transition-all hover:border-golden/40 hover:shadow-soft"
-              >
-                Try a demo scan
-              </Link>
-            </div>
-
-          </div>
-
-          {/* Right — Hero Card with Anti-Gravity effect */}
-          <div className="group relative">
-            {/* 3D Halo Glow Background */}
-            <div className="absolute -inset-10 animate-pulse rounded-[3rem] bg-gradient-to-br from-golden/20 via-transparent to-amber-glow/10 blur-[80px]" />
-            <div className="absolute -inset-4 rounded-[3rem] bg-gradient-to-tr from-night/40 via-transparent to-white/5 blur-2xl" />
-
-            {/* Main Passport Card */}
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-night/90 p-8 text-moonlight shadow-2xl backdrop-blur-2xl transition-all duration-500 group-hover:scale-[1.01] group-hover:border-white/20">
-
-              {/* Animated Glass Reflection Beam */}
-              <div className="pointer-events-none absolute -left-[100%] top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/5 to-transparent transition-all duration-1000 group-hover:left-[200%]" />
-
-              {/* Top Glass Bar */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-glow opacity-75"></span>
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-amber-glow"></span>
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-moonlight/40">
-                    Live Emergency View
-                  </span>
-                </div>
-                <div className="rounded-full border border-golden/20 bg-golden/5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-golden">
-                  Verified Identity
-                </div>
-              </div>
-
-              {/* Patient Profile */}
-              <div className="mt-10 flex items-end justify-between">
-                <div>
-                  <h2 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
-                    Maria Santos
-                  </h2>
-                  <div className="mt-3 flex items-center gap-4 text-xs font-medium tracking-widest text-moonlight/40">
-                    <span className="flex items-center gap-1.5">
-                      <User className="h-3 w-3" /> 34 YEARS
-                    </span>
-                    <span className="h-1 w-1 rounded-full bg-white/10" />
-                    <span className="flex items-center gap-1.5">
-                      <Activity className="h-3 w-3" /> O-NEGATIVE
-                    </span>
-                  </div>
-                </div>
-                <div className="hidden h-16 w-16 items-center justify-center rounded-2xl border border-white/5 bg-white/5 backdrop-blur-md sm:flex">
-                  <div className="h-10 w-10 opacity-20 transition-opacity group-hover:opacity-40">
-                    <Logo variant="light" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative Divider */}
-              <div className="my-8 h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
-              {/* Medical Data Grid */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <MedicalTile
-                  icon={ShieldAlert}
-                  label="Critical Allergy"
-                  value="Penicillin"
-                  tone="danger"
-                />
-                <MedicalTile
-                  icon={AlertCircle}
-                  label="Food Allergy"
-                  value="Shellfish"
-                  tone="warn"
-                />
-                <MedicalTile
-                  icon={Activity}
-                  label="Condition"
-                  value="Chronic Asthma"
-                  tone="warn"
-                />
-                <MedicalTile
-                  icon={PillIcon}
-                  label="Medication"
-                  value="Salbutamol"
-                  tone="ok"
-                />
-              </div>
-
-              {/* Bottom Drawer: Emergency Contact */}
-              <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-md transition-all hover:bg-white/[0.06]">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-[0.15em] text-moonlight/30">
-                      Primary Contact
-                    </div>
-                    <div className="mt-1 flex items-center gap-2 text-base font-semibold">
-                      Andres Santos
-                      <span className="rounded-md bg-white/5 px-1.5 py-0.5 text-[9px] font-medium uppercase text-moonlight/40">
-                        Spouse
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-golden/10 border border-golden/20">
-                    <Heart className="h-4 w-4 text-golden" fill="currentColor" fillOpacity={0.1} />
-                  </div>
-                </div>
-                <div className="mt-2 flex items-center gap-2 text-sm text-moonlight/50">
-                  <span className="font-mono">+63 917 555 0142</span>
-                </div>
-              </div>
-
-              {/* Holographic "Scan" Line */}
-              <div className="pointer-events-none absolute left-0 top-0 h-[2px] w-full animate-[scan_4s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-golden/40 to-transparent opacity-20" />
-            </div>
-
-            {/* Secondary Floating Card (The Passport) */}
-            <div className="absolute -bottom-6 -right-6 hidden rounded-2xl border border-white/10 bg-night/80 p-4 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:translate-y-[-10px] md:block">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-golden/20 flex items-center justify-center">
-                  <div className="h-6 w-6 border-2 border-golden rounded-sm flex items-center justify-center">
-                    <div className="h-2 w-2 bg-golden rounded-full" />
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-moonlight/40">
-                    ID: MP-2026-004
-                  </div>
-                  <div className="text-xs font-semibold text-golden">
-                    Permanent QR Active
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* ═══════════════ FEATURES ═══════════════ */}
       <ScrollRevealFeatures />
@@ -431,14 +220,14 @@ export default function HomePage() {
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/data-processing" className="transition-colors hover:text-golden">
                       Data Processing
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/cookies" className="transition-colors hover:text-golden">
                       Cookie Policy
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -450,9 +239,9 @@ export default function HomePage() {
                 </h4>
                 <ul className="space-y-3 text-sm">
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/contact" className="transition-colors hover:text-golden">
                       Contact Us
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a href="#" className="transition-colors hover:text-golden">
@@ -524,9 +313,12 @@ export default function HomePage() {
               <Link href="/terms" className="transition-colors hover:text-golden">
                 Terms
               </Link>
-              <a href="#" className="transition-colors hover:text-golden">
+              <Link href="/data-processing" className="transition-colors hover:text-golden">
+                Data Processing
+              </Link>
+              <Link href="/cookies" className="transition-colors hover:text-golden">
                 Cookies
-              </a>
+              </Link>
             </div>
           </div>
         </div>

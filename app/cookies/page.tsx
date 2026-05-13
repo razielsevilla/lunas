@@ -1,37 +1,37 @@
 "use client";
 
 /**
- * Terms of Service — Lunas
- * Redesigned to match the Premium Aesthetic.
+ * Cookie Policy — Lunas
+ * Redesigned to match the Problem & Solution aesthetic.
  */
 
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { 
   ArrowLeft, 
-  UserCheck, 
-  Stethoscope, 
-  Key,
-  ShieldAlert,
-  MapPin
+  ShieldCheck, 
+  Settings, 
+  Database,
+  MapPin,
+  Cookie
 } from "lucide-react";
 
-export default function TermsPage() {
+export default function CookiePolicyPage() {
   const sections = [
     {
-      icon: UserCheck,
-      title: "User Accountability",
-      description: "You are responsible for ensuring all medical information provided is accurate and up-to-date. Lunas is a platform for information storage, not validation.",
+      icon: Cookie,
+      title: "Essential Cookies",
+      description: "These are strictly necessary for the website to function. They enable core features like security, network management, and accessibility.",
     },
     {
-      icon: Stethoscope,
-      title: "Medical Disclaimer",
-      description: "Lunas is not a medical provider. Our service is a tool for information sharing in emergencies and does not substitute professional medical advice, diagnosis, or treatment.",
+      icon: Database,
+      title: "Performance Tracking",
+      description: "We use these to understand how visitors interact with our site, helping us discover which pages are most and least popular.",
     },
     {
-      icon: Key,
-      title: "Secure Access",
-      description: "You are responsible for maintaining the confidentiality of your account and for all activities that occur under your unique medical QR code.",
+      icon: Settings,
+      title: "User Preferences",
+      description: "These allow our website to remember choices you make (such as your region) to provide a more personalized experience.",
     },
   ];
 
@@ -68,12 +68,12 @@ export default function TermsPage() {
           <div className="space-y-8">
             <div>
               <h1 className="font-display text-5xl font-bold leading-[1.1] tracking-tighter text-night md:text-6xl lg:text-7xl">
-                Terms of <br />
-                <span className="text-golden italic">Engagement.</span>
+                Transparency <br />
+                <span className="text-golden italic">by design.</span>
               </h1>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                Lunas is designed to be a reliable bridge between you and first responders. 
-                These terms ensure the platform remains safe and effective for everyone.
+                We use cookies to improve your experience and ensure our platform remains secure. 
+                Learn how we handle your digital footprint.
               </p>
             </div>
 
@@ -97,11 +97,11 @@ export default function TermsPage() {
             </div>
           </div>
 
-          {/* Right Column - Detailed Terms */}
+          {/* Right Column - Detailed Policy */}
           <div className="rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
             <div className="max-w-none space-y-12 text-muted-foreground/90">
               <div className="space-y-2 border-b border-night/5 pb-8">
-                <h2 className="font-display text-3xl font-bold text-night">General Terms</h2>
+                <h2 className="font-display text-3xl font-bold text-night">Cookie Policy</h2>
                 <p className="text-sm font-medium uppercase tracking-widest text-golden/60">Last Updated: May 14, 2026</p>
               </div>
 
@@ -110,9 +110,9 @@ export default function TermsPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">01</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Acceptance of Terms</h3>
+                <h3 className="text-xl font-bold text-night">What are cookies?</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  By accessing or using Lunas, you agree to be bound by these Terms of Service. If you do not agree to all of these terms, do not use the platform.
+                  Cookies are small text files that are placed on your computer by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
                 </p>
               </section>
 
@@ -121,12 +121,12 @@ export default function TermsPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">02</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Proper Use</h3>
+                <h3 className="text-xl font-bold text-night">How we use them</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  The Lunas medical passport is intended for emergency use. Misuse of the platform, including providing false medical information or attempting to bypass security measures, may result in account termination.
+                  We use cookies for several reasons. Some cookies are required for technical reasons in order for our website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies enable us to track and target the interests of our users to enhance the experience on our Online Properties.
                 </p>
                 <div className="rounded-xl border border-golden/20 bg-golden/[0.03] p-4 text-sm italic text-golden/80">
-                  "Lunas reserves the right to suspend any account that provides misleading or fraudulent medical data."
+                  "Our cookies do not store any sensitive medical information. Your health data is always kept separate and secure."
                 </div>
               </section>
 
@@ -135,9 +135,9 @@ export default function TermsPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">03</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Limitation of Liability</h3>
+                <h3 className="text-xl font-bold text-night">Managing Cookies</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  Lunas provides a platform for information display. We are not responsible for the actions of medical professionals or first responders who use (or fail to use) the information displayed.
+                  You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. 
                 </p>
               </section>
 
@@ -146,9 +146,9 @@ export default function TermsPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">04</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Modifications</h3>
+                <h3 className="text-xl font-bold text-night">Updates to this policy</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  We may update these terms from time to time. Your continued use of Lunas after changes are posted constitutes your acceptance of the new terms.
+                  We may update this Cookie Policy from time to time in order to reflect, for example, changes to the cookies we use or for other operational, legal or regulatory reasons. Please therefore re-visit this Cookie Policy regularly to stay informed.
                 </p>
               </section>
 
@@ -271,7 +271,7 @@ export default function TermsPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cookies" className="transition-colors hover:text-golden">
+                    <Link href="/cookies" className="transition-colors hover:text-golden text-golden font-medium">
                       Cookie Policy
                     </Link>
                   </li>
@@ -309,8 +309,6 @@ export default function TermsPage() {
             </div>
           </div>
         </div>
-
-
 
         {/* ── Bottom bar ── */}
         <div className="border-t border-border/50">

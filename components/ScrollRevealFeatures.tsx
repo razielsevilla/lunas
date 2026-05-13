@@ -67,8 +67,8 @@ export function ScrollRevealFeatures() {
         gsap.from(heroRef.current.querySelectorAll(".hero-line"), {
           y: 40,
           opacity: 0,
-          stagger: 0.1,
-          duration: 0.8,
+          stagger: 0.05,
+          duration: 0.4,
           ease: "power2.out",
           scrollTrigger: {
             trigger: heroRef.current,
@@ -85,8 +85,8 @@ export function ScrollRevealFeatures() {
           {
             y: 0,
             opacity: 1,
-            stagger: 0.1,
-            duration: 0.8,
+            stagger: 0.05,
+            duration: 0.4,
             ease: "power2.out",
             scrollTrigger: {
               trigger: cardsRef.current,
@@ -125,13 +125,13 @@ export function ScrollRevealFeatures() {
             </span>
           </div>
           <p className="hero-line mt-6 text-lg leading-relaxed text-muted-foreground/80">
-            A medical passport designed for resilience. We stripped away the 
+            A medical passport designed for resilience. We stripped away the
             complexity to focus on the four pillars of emergency readiness.
           </p>
         </div>
 
         {/* BENTO GRID */}
-        <div 
+        <div
           ref={cardsRef}
           className="grid gap-4 md:grid-cols-12 md:grid-rows-2"
         >
@@ -147,19 +147,19 @@ export function ScrollRevealFeatures() {
               <p className="mt-3 max-w-md text-sm text-muted-foreground/70">
                 Beyond basic IDs. Lunas carries your full clinical context — allergies, medications, and surgical history.
               </p>
-              
+
               {/* Mini Dashboard UI Mockup */}
               <div className="mt-8 grid grid-cols-3 gap-3">
                 <div className="rounded-xl bg-night/[0.02] border border-border/50 p-4 transition-colors group-hover:bg-night/[0.05]">
-                  <div className="text-[10px] uppercase tracking-wider text-night/30">Blood Type</div>
+                  <div className="text-[10px] uppercase tracking-wider text-night/50">Blood Type</div>
                   <div className="mt-1 text-xl font-bold text-golden">O- Negative</div>
                 </div>
                 <div className="rounded-xl bg-night/[0.02] border border-border/50 p-4 transition-colors group-hover:bg-night/[0.05]">
-                  <div className="text-[10px] uppercase tracking-wider text-night/30">Allergies</div>
+                  <div className="text-[10px] uppercase tracking-wider text-night/50">Allergies</div>
                   <div className="mt-1 text-xl font-bold text-[#D4736E]">Penicillin +2</div>
                 </div>
                 <div className="rounded-xl bg-night/[0.02] border border-border/50 p-4 transition-colors group-hover:bg-night/[0.05]">
-                  <div className="text-[10px] uppercase tracking-wider text-night/30">Conditions</div>
+                  <div className="text-[10px] uppercase tracking-wider text-night/50">Conditions</div>
                   <div className="mt-1 text-xl font-bold text-night">Asthma</div>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export function ScrollRevealFeatures() {
               <div className="mt-auto">
                 <div className="flex items-baseline gap-2">
                   <span className="text-6xl font-black tracking-tighter text-night">2.1s</span>
-                  <span className="text-sm font-medium text-night/30 uppercase tracking-widest">Avg Scan</span>
+                  <span className="text-sm font-medium text-night/50 uppercase tracking-widest">Avg Scan</span>
                 </div>
                 {/* Progress bar style element */}
                 <div className="mt-6 h-2.5 w-full overflow-hidden rounded-full bg-night/5">
@@ -207,9 +207,9 @@ export function ScrollRevealFeatures() {
 
               <div className="mt-8 flex gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-night/5 border border-border transition-transform group-hover:scale-110">
-                  <Command size={20} className="text-night/20" />
+                  <Command size={20} className="text-night/40" />
                 </div>
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-night/5 border border-border text-lg font-bold text-night/20 transition-transform group-hover:scale-110">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-night/5 border border-border text-lg font-bold text-night/40 transition-transform group-hover:scale-110">
                   K
                 </div>
               </div>
@@ -232,15 +232,15 @@ export function ScrollRevealFeatures() {
               <div className="mt-8 flex gap-3 overflow-hidden">
                 {[Wallet, QrCode, FileText, Smartphone].map((Icon, idx) => (
                   <div key={idx} className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-night/5 border border-border/50 transition-colors hover:bg-night/10">
-                    <Icon size={18} className="text-night/10" />
+                    <Icon size={18} className="text-night/40" />
                   </div>
                 ))}
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-night/5 border border-border/50">
-                  <Plus size={16} className="text-night/10" />
+                  <Plus size={16} className="text-night/40" />
                 </div>
               </div>
-              
-              <div className="mt-auto pt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-night/30">
+
+              <div className="mt-auto pt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-night/50">
                 <span>View all formats</span>
                 <ArrowRight size={12} />
               </div>

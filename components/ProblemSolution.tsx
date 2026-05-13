@@ -64,42 +64,55 @@ export function ProblemSolution() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Main container animation
-      gsap.from(".split-content > *", {
-        y: 20,
+      // 1. Reveal Headings & Text (Left Side)
+      gsap.from(".problem-reveal .reveal-item", {
+        y: 40,
         opacity: 0,
         stagger: 0.1,
         duration: 0.8,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: sectionRef.current,
+          trigger: ".problem-reveal",
           start: "top 85%",
         },
       });
 
-      // Problem cards staggered
+      // 2. Reveal Problem Cards
       gsap.from(".problem-card-anim", {
-        x: -15,
+        y: 30,
         opacity: 0,
-        stagger: 0.08,
-        duration: 0.6,
-        ease: "power2.out",
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
+          trigger: ".problem-reveal",
+          start: "top 75%",
         },
       });
 
-      // Solution cards staggered
-      gsap.from(".solution-card-anim", {
-        x: 15,
+      // 3. Reveal Headings & Text (Right Side)
+      gsap.from(".solution-reveal .reveal-item", {
+        y: 40,
         opacity: 0,
-        stagger: 0.08,
-        duration: 0.6,
-        ease: "power2.out",
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
+          trigger: ".solution-reveal",
+          start: "top 85%",
+        },
+      });
+
+      // 4. Reveal Solution Cards
+      gsap.from(".solution-card-anim", {
+        y: 30,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".solution-reveal",
+          start: "top 75%",
         },
       });
     }, sectionRef);
@@ -143,17 +156,17 @@ export function ProblemSolution() {
       <div className="split-content relative flex h-full w-full flex-col md:flex-row">
 
         {/* ═══════════════ THE PROBLEM (Left) ═══════════════ */}
-        <div className="relative flex flex-col justify-center border-r border-night/5 bg-[#8B3A3A]/[0.015] px-8 py-20 md:w-[45%] md:px-12 lg:px-24">
+        <div className="problem-reveal relative flex flex-col justify-center border-r border-night/5 bg-[#8B3A3A]/[0.015] px-8 py-20 md:w-[45%] md:px-12 lg:px-24">
           <div className="mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#8B3A3A]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#8B3A3A]">
+            <div className="reveal-item inline-flex items-center gap-2 rounded-full bg-[#8B3A3A]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#8B3A3A]">
               <AlertTriangle size={12} />
               The Problem
             </div>
-            <h2 className="mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tighter text-night lg:text-6xl">
+            <h2 className="reveal-item mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tighter text-night lg:text-6xl">
               The information <br />
               <span className="text-[#8B3A3A]/80 italic">vacuum.</span>
             </h2>
-            <p className="mt-6 text-sm leading-relaxed text-muted-foreground/80 lg:text-base">
+            <p className="reveal-item mt-6 text-sm leading-relaxed text-muted-foreground/80 lg:text-base">
               When seconds count, medical teams are often left in the dark.
               Communication barriers cost lives.
             </p>
@@ -181,17 +194,17 @@ export function ProblemSolution() {
         </div>
 
         {/* ═══════════════ THE SOLUTION (Right) ═══════════════ */}
-        <div className="relative flex flex-1 flex-col justify-center px-8 py-20 md:px-12 lg:px-24">
+        <div className="solution-reveal relative flex flex-1 flex-col justify-center px-8 py-20 md:px-12 lg:px-24">
           <div className="mb-12">
-            <div className="inline-flex items-center gap-2 rounded-full bg-golden/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-golden">
+            <div className="reveal-item inline-flex items-center gap-2 rounded-full bg-golden/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-golden">
               <Sparkles size={12} />
               The Solution
             </div>
-            <h2 className="mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tighter text-night lg:text-6xl">
+            <h2 className="reveal-item mt-4 font-display text-4xl font-bold leading-[1.1] tracking-tighter text-night lg:text-6xl">
               Meet Lunas. <br />
               <span className="text-golden italic">The antidote.</span>
             </h2>
-            <p className="mt-6 text-sm leading-relaxed text-muted-foreground/80 lg:text-base">
+            <p className="reveal-item mt-6 text-sm leading-relaxed text-muted-foreground/80 lg:text-base">
               A secure, editorial-grade health ID that bridges the gap between
               fragmented records and life-saving decisions.
             </p>

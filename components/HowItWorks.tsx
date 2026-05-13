@@ -2,12 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   UserPlus,
   QrCode,
   ShieldCheck,
   ArrowRight
 } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const steps = [
   {
@@ -53,7 +56,53 @@ const steps = [
 
 export function HowItWorks() {
   const [activeTab, setActiveTab] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
+
+  // Entrance animations on scroll
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Heading & Intro
+      gsap.from(".how-reveal-header > *", {
+        y: 40,
+        opacity: 0,
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".how-reveal-header",
+          start: "top 85%",
+        },
+      });
+
+      // 2. Navigation Steps
+      gsap.from(".how-step-anim", {
+        x: -30,
+        opacity: 0,
+        stagger: 0.12,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".how-step-anim",
+          start: "top 80%",
+        },
+      });
+
+      // 3. Preview Card
+      gsap.from(".how-preview-anim", {
+        x: 40,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".how-preview-anim",
+          start: "top 80%",
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   // Animation for preview area when tab changes
   useEffect(() => {
@@ -67,7 +116,7 @@ export function HowItWorks() {
   }, [activeTab]);
 
   return (
-    <section id="how" className="relative bg-ivory py-32 overflow-hidden text-night">
+    <section ref={sectionRef} id="how" className="relative bg-ivory py-32 overflow-hidden text-night">
       {/* Background elements */}
       <div className="pointer-events-none absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-golden/[0.04] blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-20 right-1/4 h-80 w-80 rounded-full bg-amber-glow/[0.04] blur-[100px]" />
@@ -77,7 +126,7 @@ export function HowItWorks() {
 
           {/* Left Column - Navigation */}
           <div className="flex flex-col justify-center">
-            <div className="mb-12">
+            <div className="how-reveal-header mb-12">
               <h2 className="font-display text-5xl font-bold tracking-tighter sm:text-6xl text-night">
                 How it works.
               </h2>
@@ -88,38 +137,39 @@ export function HowItWorks() {
 
             <div className="space-y-4">
               {steps.map((step, index) => (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => setActiveTab(index)}
-                  className={`group relative z-20 w-full rounded-3xl border p-7 text-left transition-all duration-700 cursor-pointer ${activeTab === index
+                <div key={step.id} className="how-step-anim">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(index)}
+                    className={`group relative z-20 w-full rounded-3xl border p-7 text-left transition-all duration-700 cursor-pointer ${activeTab === index
                       ? "bg-white border-golden/40 shadow-soft-xl scale-[1.02] ring-1 ring-golden/10"
                       : "bg-transparent border-border hover:border-golden/30 hover:bg-white/60 hover:shadow-soft"
-                    }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className={`font-display text-xl font-semibold tracking-tight transition-colors ${activeTab === index ? "text-night" : "text-night/50 group-hover:text-night"}`}>
-                        {step.title}
-                      </h3>
-                      <p className={`mt-1 text-sm transition-colors ${activeTab === index ? "text-muted-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}`}>
-                        {step.subtitle}
-                      </p>
-                    </div>
-                    <div className={`flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-500 ${activeTab === index
+                      }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className={`font-display text-xl font-semibold tracking-tight transition-colors ${activeTab === index ? "text-night" : "text-night/50 group-hover:text-night"}`}>
+                          {step.title}
+                        </h3>
+                        <p className={`mt-1 text-sm transition-colors ${activeTab === index ? "text-muted-foreground" : "text-muted-foreground/40 group-hover:text-muted-foreground/60"}`}>
+                          {step.subtitle}
+                        </p>
+                      </div>
+                      <div className={`flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-500 ${activeTab === index
                         ? "bg-night border-night text-white shadow-glow-sm"
                         : "bg-white border-border text-night/30 group-hover:border-golden/30 group-hover:text-night"
-                      }`}>
-                      <ArrowRight size={20} className={activeTab === index ? "scale-110" : "group-hover:translate-x-0.5 transition-transform"} />
+                        }`}>
+                        <ArrowRight size={20} className={activeTab === index ? "scale-110" : "group-hover:translate-x-0.5 transition-transform"} />
+                      </div>
                     </div>
-                  </div>
-                </button>
+                  </button>
+                </div>
               ))}
             </div>
           </div>
 
           {/* Right Column - Preview Area */}
-          <div className="relative flex">
+          <div className="how-preview-anim relative flex">
             <div
               ref={previewRef}
               className="relative flex w-full flex-col rounded-[2.5rem] border border-border/40 bg-white/80 p-8 backdrop-blur-md shadow-soft-2xl overflow-hidden h-full"
