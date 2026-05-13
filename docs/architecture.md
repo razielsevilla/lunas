@@ -10,22 +10,22 @@ Lunas is a monolithic Next.js application using the App Router. All frontend and
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        CLIENT LAYER                         │
-│  Patient Browser │ Professional Mobile │ Admin Dashboard    │
+│                        CLIENT LAYER                          │
+│  Patient Browser │ Professional Mobile │ Admin Dashboard     │
 └────────────┬────────────────┬──────────────────┬────────────┘
              │                │                  │
              ▼                ▼                  ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    NEXT.JS APP ROUTER                       │
-│                                                             │
+│                    NEXT.JS APP ROUTER                        │
+│                                                              │
 │  ┌──────────────┐  ┌─────────────────┐  ┌────────────────┐  │
 │  │ (auth) pages │  │ (patient) pages │  │ (admin) pages  │  │
 │  └──────────────┘  └─────────────────┘  └────────────────┘  │
-│                                                             │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │                    API ROUTES (/api/*)                │  │
-│  │  auth/ │ patient/ │ professional/ │ qr/ │ admin/      │  │
-│  └───────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │                    API ROUTES (/api/*)                  │  │
+│  │  auth/ │ patient/ │ professional/ │ qr/ │ admin/       │  │
+│  └────────────────────────────────────────────────────────┘  │
 └──────────────────────────┬──────────────────────────────────┘
                            │
              ┌─────────────┼─────────────┐
@@ -126,13 +126,7 @@ Lunas is a monolithic Next.js application using the App Router. All frontend and
 - When professional accesses emergency view → high-severity interactions shown prominently in red
 - Patient dashboard also shows their own warnings in plain language
 
-- Patient enters medications → system normalizes names (RxNorm when available) and checks interactions.
-- By default (MVP) the system uses a local hardcoded table of the 20 most common dangerous drug pairs to guarantee demo reliability. If `DRUGBANK_API_KEY` (or another external lookup) is configured, the system may perform a live lookup against DrugBank or NIH RxNorm to provide expanded results.
-- Dangerous pairs flagged and stored as warnings in the profile
-- When professional accesses emergency view → high-severity interactions shown prominently in red
-- Patient dashboard also shows their own warnings in plain language
-
-**MVP behavior:** Use a local hardcoded table of the 20 most common dangerous drug pairs as the default interaction source to ensure the demo works offline and without API keys. External lookups (DrugBank / NIH RxNorm) are optional and used only when an API key is provided.
+**MVP fallback:** If DrugBank API is unavailable, use a local hardcoded table of the 20 most common dangerous drug pairs.
 
 ---
 

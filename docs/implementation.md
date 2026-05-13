@@ -31,7 +31,6 @@ feature/patient-ui        → Dev C
 feature/professional-ui   → Dev D
 feature/admin-ui          → Dev E
 feature/shared-components → Dev E (early) then everyone uses
-feature/landing-page      → Member G
 ```
 
 **Rule:** No one pushes directly to `develop`. Open a PR; Team Lead reviews and merges. Keep PRs small.
@@ -44,10 +43,10 @@ feature/landing-page      → Member G
 |---|---|---|
 | **Phase 0** | 0:00–1:00 | Setup & scaffolding — everyone unblocked |
 | **Phase 1** | 1:00–5:00 | Foundation — DB, Auth, shared lib, core components |
-| **Phase 2** | 5:00–12:00 | Core feature development (parallel tracks) |
-| **Phase 3** | 12:00–17:00 | Integration, drug interaction, notifications |
-| **Phase 4** | 17:00–20:00 | QA, bug fixing, polish |
-| **Phase 5** | 20:00–22:00 | Demo prep, seed data, final deploy |
+| **Phase 2** | 5:00–13:00 | Core feature development (parallel tracks) |
+| **Phase 3** | 13:00–19:00 | Integration, drug interaction, notifications |
+| **Phase 4** | 19:00–22:00 | QA, bug fixing, polish |
+| **Phase 5** | 22:00–24:00 | Demo prep, seed data, final deploy |
 
 ---
 
@@ -57,31 +56,32 @@ feature/landing-page      → Member G
 **All hands on deck. Goal: everyone can run the app locally by H+1.**
 
 ### Team Lead (You)
-- [x] Create GitHub repo, set up branch protection on `main`
-- [x] Run `npx create-next-app@latest lunas --typescript --tailwind --app`
-- [x] Install all dependencies (see `ENVIRONMENT.md`)
-- [x] Initialize Prisma: `npx prisma init`
-- [x] Paste full schema from `schema.md` into `prisma/schema.prisma`
-- [x] Create `.env.example` from `ENVIRONMENT.md`
-- [x] Create `.env` with real values (Supabase DB, Gmail SMTP, generated keys)
-- [x] Run `npx prisma migrate dev --name init && npx prisma generate`
-- [x] Push to GitHub. Share `.env` privately with the team (Discord DM / secure note)
-- [x] Confirm everyone can `git clone`, `npm install`, copy `.env`, and `npm run dev`
+- [ ] Create GitHub repo, set up branch protection on `main`
+- [ ] Run `npx create-next-app@latest lunas --typescript --tailwind --app`
+- [ ] Install all dependencies (see `ENVIRONMENT.md`)
+- [ ] Initialize Prisma: `npx prisma init`
+- [ ] Paste full schema from `DATABASE_SCHEMA.md` into `prisma/schema.prisma`
+- [ ] Create `.env.example` from `ENVIRONMENT.md`
+- [ ] Create `.env` with real values (Supabase DB, Gmail SMTP, generated keys)
+- [ ] Run `npx prisma migrate dev --name init && npx prisma generate`
+- [ ] Push to GitHub. Share `.env` privately with the team (Discord DM / secure note)
+- [ ] Confirm everyone can `git clone`, `npm install`, copy `.env`, and `npm run dev`
 
 ### All Coders (Dev A–E)
-- [x] Clone repo
-- [x] Set up `.env`
-- [x] Run `npm run dev` — confirm app loads
-- [x] Check out your assigned feature branch
+- [ ] Clone repo
+- [ ] Set up `.env`
+- [ ] Run `npm run dev` — confirm app loads
+- [ ] Check out your assigned feature branch
 
 ### Member G
-- [x] Create the project landing page: design, copy, and implementation
-- [x] Scaffold `app/page.tsx` with a responsive Tailwind layout
-- [x] Coordinate visuals and copy with Member H and prepare demo CTA / assets
+### Member G
+- [ ] Create the project landing page: design, copy, and implementation
+- [ ] Scaffold `app/landing` (or `pages/index.tsx`) with a responsive Tailwind layout
+- [ ] Coordinate visuals and copy with Member H and prepare demo CTA / assets
 
 ### Member H
-- [x] Begin slide deck outline (Problem → Solution → Demo → Tech Stack → Team)
-- [x] Prepare demo script: patient registration → QR generation → professional scan → emergency view
+- [ ] Begin slide deck outline (Problem → Solution → Demo → Tech Stack → Team)
+- [ ] Prepare demo script: patient registration → QR generation → professional scan → emergency view
 
 ---
 
@@ -121,15 +121,15 @@ Hour 4–5:
 Hour 1–2:
 - [ ] `lib/mailer.ts` — Nodemailer setup, `sendEmail(to, subject, body)`
 - [ ] `lib/sms.ts` — Twilio stub (or `console.log` fallback for demo)
-- [ ] `lib/drugcheck.ts` — Local hardcoded table of the 20 most common dangerous drug pairs (DEFAULT for MVP). If `DRUGBANK_API_KEY` is provided, `lib/drugcheck.ts` may optionally query an external service (DrugBank or NIH RxNorm) for a "live" lookup.
+- [ ] `lib/drugcheck.ts` — DrugBank API call + local fallback table (20 common dangerous pairs)
 
 Hour 2–4:
 - [ ] `lib/qr.ts` — `generateQrImage(uuid: string): Promise<string>` (returns base64 PNG)
 - [ ] `GET /api/patient/qr` — returns QR UUID and base64 image
 - [ ] `GET /api/scan/[uuid]` — public, returns minimal patient info for PIN entry screen
 
--Hour 4–5:
-- [ ] Write local hardcoded drug interaction table (20 most common dangerous pairs with severity) and ensure `lib/drugcheck.ts` prefers the local table by default. Add an optional external lookup path enabled only when `DRUGBANK_API_KEY` (or other API keys) are present.
+Hour 4–5:
+- [ ] Write local drug interaction fallback table (at least 15 common pairs with severity)
 - [ ] Test `generateQrImage()` in isolation — confirm PNG output
 - [ ] Stub out notification function: `notifyEmergencyContacts(patientProfileId: string)`
 
@@ -216,7 +216,7 @@ Hour 4–5:
 - [ ] `PUT /api/patient/profile` — update basic info (encrypt before save)
 - [ ] `POST /api/patient/allergies` + `DELETE /api/patient/allergies/:id`
 - [ ] `POST /api/patient/medications` + `DELETE /api/patient/medications/:id`
-  - On every medication add/delete: call `lib/drugcheck.ts` and update `DrugInteraction` records (the service prefers the local 20-pair table for MVP; external API calls only when configured).
+  - On every medication add/delete: call `lib/drugcheck.ts` and update `DrugInteraction` records
 - [ ] `POST /api/patient/surgeries` + `DELETE /api/patient/surgeries/:id`
 - [ ] `POST /api/patient/emergency-contacts` + `DELETE /api/patient/emergency-contacts/:id`
 - [ ] `GET /api/patient/access-logs`
