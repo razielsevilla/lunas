@@ -4,11 +4,11 @@ import {
   UserCircle, 
   QrCode, 
   History, 
-  LogOut, 
   type LucideIcon 
 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { LogoutButton } from '@/components/ui/LogoutButton';
 
 type NavItem = {
   label: string;
@@ -95,10 +95,7 @@ export function PatientLayout({
 
         {/* Logout Section at the bottom */}
         <div className="mt-auto border-t border-white/10 pt-6">
-           <button className="group flex w-full items-center gap-4 px-4 py-3 text-sm font-medium text-white/60 transition-all hover:text-white">
-            <LogOut className="h-5 w-5 text-white/40 group-hover:text-white" />
-            <span>Log Out</span>
-          </button>
+          <LogoutButton />
         </div>
       </aside>
 
