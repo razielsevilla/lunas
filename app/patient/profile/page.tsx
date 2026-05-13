@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { PatientLayout } from '@/components/layout/PatientLayout';
-import { Trash2, Plus, AlertTriangle, ChevronUp, ChevronDown, Save, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Trash2, Plus, AlertTriangle, ChevronUp, ChevronDown, Save, Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<any>(null);
@@ -10,6 +10,8 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [notification, setNotification] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [drugInteractions, setDrugInteractions] = useState<any[]>([]);
+  const [operatingOnItem, setOperatingOnItem] = useState<string | null>(null);
   
   // State for collapsible sections
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({
@@ -25,6 +27,23 @@ export default function ProfilePage() {
     setNotification({ type, text });
     setTimeout(() => setNotification(null), 3000);
   };
+
+  const calculateCompletion = useCallback(() => {
+    if (!profile) return 0;
+    const fields = [
+      profile.bloodType,
+      profile.isOrganDonor !== null && profile.isOrganDonor !== undefined,
+      profile.heightCm,
+      profile.weightKg,
+      profile.allergies && profile.allergies.length > 0,
+      profile.medications && profile.medications.length > 0,
+      profile.surgeries && profile.surgeries.length > 0,
+      profile.emergencyContacts && profile.emergencyContacts.length > 0,
+      profile.notes
+    ];
+    const filled = fields.filter(Boolean).length;
+    return Math.round((filled / fields.length) * 100);
+  }, [profile]);
 
   const toggleSection = (section: string) => {
     setCollapsedSections(prev => ({ ...prev, [section]: !prev[section] }));
@@ -68,6 +87,98 @@ export default function ProfilePage() {
     const newList = [...profile[field]];
     newList[index] = { ...newList[index], [key]: value };
     setProfile({ ...profile, [field]: newList });
+  };
+
+  // Item-level add handlers with loading states
+  const addItemWithSave = async (field: string, item: any) => {
+    const itemKey = `add-${field}-${Date.now()}`;
+    setOperatingOnItem(itemKey);
+    try {
+      let endpoint = '';
+      let body: any = {};
+
+      if (field === 'allergies') {
+        endpoint = '/api/patient/allergies';
+        body = { allergen: item.allergen, reaction: item.reaction, severity: item.severity || 'MILD' };
+      } else if (field === 'medications') {
+        endpoint = '/api/patient/medications';
+        body = { name: item.name, dosage: item.dosage, frequency: item.frequency, prescribedFor: item.prescribedFor, rxNormCode: item.rxNormCode };
+      } else if (field === 'surgeries') {
+        endpoint = '/api/patient/surgeries';
+        body = { procedure: item.procedure, datePerformed: item.datePerformed, hospital: item.hospital, notes: item.notes };
+      } else if (field === 'emergencyContacts') {
+        endpoint = '/api/patient/emergency-contacts';
+        body = { name: item.name, relationship: item.relationship, mobile: item.mobile, email: item.email };
+      }
+
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        const newItem = await res.json();
+        // Update local state with the newly created item (with ID)
+        const updatedList = profile[field].map((i: any) => 
+          i === item ? { ...i, ...newItem } : i
+        );
+        setProfile({ ...profile, [field]: updatedList });
+        showNotification('success', `${field === 'emergencyContacts' ? 'Contact' : field.slice(0, -1)} added successfully`);
+        
+        // Reload to get fresh drug interactions if medications
+        if (field === 'medications') {
+          const profileRes = await fetch('/api/patient/profile');
+          if (profileRes.ok) {
+            const updated = await profileRes.json();
+            setProfile(updated);
+          }
+        }
+      } else {
+        showNotification('error', `Failed to add item`);
+      }
+    } catch (err) {
+      showNotification('error', `Error adding item`);
+    } finally {
+      setOperatingOnItem(null);
+    }
+  };
+
+  // Item-level delete handlers with loading states
+  const deleteItemWithSave = async (field: string, itemId: string, itemName: string) => {
+    const itemKey = `del-${field}-${itemId}`;
+    setOperatingOnItem(itemKey);
+    try {
+      let endpoint = '';
+      if (field === 'allergies') endpoint = `/api/patient/allergies/${itemId}`;
+      else if (field === 'medications') endpoint = `/api/patient/medications/${itemId}`;
+      else if (field === 'surgeries') endpoint = `/api/patient/surgeries/${itemId}`;
+      else if (field === 'emergencyContacts') endpoint = `/api/patient/emergency-contacts/${itemId}`;
+
+      const res = await fetch(endpoint, { method: 'DELETE' });
+
+      if (res.ok) {
+        // Remove from local state
+        const updatedList = profile[field].filter((i: any) => i.id !== itemId);
+        setProfile({ ...profile, [field]: updatedList });
+        showNotification('success', `Item removed successfully`);
+        
+        // Reload to get fresh drug interactions if medications
+        if (field === 'medications') {
+          const profileRes = await fetch('/api/patient/profile');
+          if (profileRes.ok) {
+            const updated = await profileRes.json();
+            setProfile(updated);
+          }
+        }
+      } else {
+        showNotification('error', `Failed to remove item`);
+      }
+    } catch (err) {
+      showNotification('error', `Error removing item`);
+    } finally {
+      setOperatingOnItem(null);
+    }
   };
 
   const handleSave = useCallback(async () => {
@@ -268,6 +379,20 @@ export default function ProfilePage() {
         <div className="flex items-end justify-between">
           <div>
             <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">My Medical Profile</h1>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex-1">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-[#8d8374]">Profile Completion</p>
+                  <p className="text-sm font-bold text-[#1a1c1e]">{calculateCompletion()}%</p>
+                </div>
+                <div className="h-2 w-full rounded-full bg-neutral-200 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-[#1a1c1e] to-[#4a3e36] transition-all duration-300"
+                    style={{ width: `${calculateCompletion()}%` }}
+                  />
+                </div>
+              </div>
+            </div>
             <p className="mt-2 text-sm text-[#8d8374]">
               {profile.lastUpdated 
                 ? `Last updated ${new Date(profile.lastUpdated).toLocaleString('en-PH', { dateStyle: 'long', timeStyle: 'short' })}`
@@ -355,46 +480,54 @@ export default function ProfilePage() {
 
             {!collapsedSections.allergies && (
               <div className="mt-8 space-y-4 animate-in fade-in duration-300">
-                {profile.allergies?.map((allergy: any, index: number) => (
-                  <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
-                    <div className="flex flex-wrap items-end gap-4">
-                      <div className="min-w-[200px] flex-1 space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Allergen</label>
+                {profile.allergies?.map((allergy: any, index: number) => {
+                  const itemKey = allergy.id ? `allergy-${allergy.id}` : `temp-allergy-${index}`;
+                  const isOperating = operatingOnItem === itemKey;
+                  return (
+                    <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
+                      <div className="flex flex-wrap items-end gap-4">
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Allergen</label>
+                          <input 
+                            type="text" 
+                            value={allergy.allergen || ''} 
+                            onChange={(e) => updateListItem('allergies', index, 'allergen', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <div className="min-w-[150px] space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Severity</label>
+                          <select 
+                            value={allergy.severity || 'MILD'} 
+                            onChange={(e) => updateListItem('allergies', index, 'severity', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none"
+                          >
+                            <option value="MILD">Mild</option>
+                            <option value="MODERATE">Moderate</option>
+                            <option value="SEVERE">Severe</option>
+                            <option value="LIFE_THREATENING">Life-Threatening</option>
+                          </select>
+                        </div>
+                        <button 
+                          onClick={() => allergy.id && deleteItemWithSave('allergies', allergy.id, allergy.allergen)}
+                          disabled={isOperating || !allergy.id}
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                        >
+                          {isOperating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Reaction</label>
                         <input 
                           type="text" 
-                          value={allergy.allergen || ''} 
-                          onChange={(e) => updateListItem('allergies', index, 'allergen', e.target.value)}
+                          value={allergy.reaction || ''} 
+                          onChange={(e) => updateListItem('allergies', index, 'reaction', e.target.value)}
                           className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
                         />
                       </div>
-                      <div className="min-w-[150px] space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Severity</label>
-                        <select 
-                          value={allergy.severity || 'MILD'} 
-                          onChange={(e) => updateListItem('allergies', index, 'severity', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none"
-                        >
-                          <option value="MILD">Mild</option>
-                          <option value="MODERATE">Moderate</option>
-                          <option value="SEVERE">Severe</option>
-                          <option value="LIFE_THREATENING">Life-Threatening</option>
-                        </select>
-                      </div>
-                      <button onClick={() => removeItem('allergies', index)} className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Reaction</label>
-                      <input 
-                        type="text" 
-                        value={allergy.reaction || ''} 
-                        onChange={(e) => updateListItem('allergies', index, 'reaction', e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <button 
                   onClick={() => addItem('allergies', { allergen: '', reaction: '', severity: 'MILD' })}
                   className="mt-4 flex items-center gap-2 rounded-xl border border-dashed border-neutral-300 px-4 py-3 text-sm font-bold text-[#8d8374] hover:bg-neutral-50"
@@ -413,33 +546,74 @@ export default function ProfilePage() {
             </button>
             {!collapsedSections.medications && (
               <div className="mt-8 space-y-6 animate-in fade-in duration-300">
-                {profile.medications?.map((med: any, index: number) => (
-                  <div key={index} className="flex flex-wrap items-end gap-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
-                    <div className="min-w-[200px] flex-1 space-y-2">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Medication</label>
-                      <input 
-                        type="text" 
-                        value={med.name || ''} 
-                        onChange={(e) => updateListItem('medications', index, 'name', e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                      />
+                {/* Drug Interaction Warning Banner */}
+                {profile.drugInteractions && profile.drugInteractions.length > 0 && (
+                  <div className="rounded-2xl border-l-4 border-orange-500 bg-orange-50 p-4">
+                    <div className="flex gap-3">
+                      <AlertCircle className="h-5 w-5 flex-shrink-0 text-orange-600 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-orange-900">Drug Interaction Alert</p>
+                        <div className="mt-2 space-y-2">
+                          {profile.drugInteractions.map((interaction: any, idx: number) => (
+                            <div key={idx} className={`text-sm ${
+                              interaction.severity === 'HIGH' ? 'text-red-800 font-semibold' : 'text-orange-800'
+                            }`}>
+                              <span className={`inline-block px-2 py-1 rounded text-xs font-bold mr-2 ${
+                                interaction.severity === 'HIGH' 
+                                  ? 'bg-red-200 text-red-900' 
+                                  : 'bg-orange-200 text-orange-900'
+                              }`}>
+                                {interaction.severity}
+                              </span>
+                              {interaction.drug1} + {interaction.drug2}
+                              {interaction.description && <p className="mt-1 text-xs">{interaction.description}</p>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <div className="min-w-[200px] flex-1 space-y-2">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Dosage</label>
-                      <input 
-                        type="text" 
-                        value={med.dosage || ''} 
-                        onChange={(e) => updateListItem('medications', index, 'dosage', e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                      />
-                    </div>
-                    <button onClick={() => removeItem('medications', index)} className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
                   </div>
-                ))}
+                )}
+
+                {profile.medications?.map((med: any, index: number) => {
+                  const itemKey = med.id ? `med-${med.id}` : `temp-med-${index}`;
+                  const isOperating = operatingOnItem === itemKey;
+                  return (
+                    <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
+                      <div className="flex flex-wrap items-end gap-4">
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Medication</label>
+                          <input 
+                            type="text" 
+                            value={med.name || ''} 
+                            onChange={(e) => updateListItem('medications', index, 'name', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Dosage</label>
+                          <input 
+                            type="text" 
+                            value={med.dosage || ''} 
+                            onChange={(e) => updateListItem('medications', index, 'dosage', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <button 
+                          onClick={() => med.id && deleteItemWithSave('medications', med.id, med.name)}
+                          disabled={isOperating || !med.id}
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 disabled:opacity-50"
+                        >
+                          {isOperating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
                 <button 
-                  onClick={() => addItem('medications', { name: '', dosage: '' })}
+                  onClick={() => {
+                    addItem('medications', { name: '', dosage: '', frequency: '', prescribedFor: '', rxNormCode: '' });
+                  }}
                   className="flex items-center gap-2 rounded-xl border border-dashed border-neutral-300 px-4 py-3 text-sm font-bold text-[#8d8374] hover:bg-neutral-50"
                 >
                   <Plus className="h-4 w-4" /> Add Another Medication
@@ -456,50 +630,58 @@ export default function ProfilePage() {
             </button>
             {!collapsedSections.surgeries && (
               <div className="mt-8 space-y-4 animate-in fade-in duration-300">
-                {profile.surgeries?.map((surgery: any, index: number) => (
-                  <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
-                    <div className="flex flex-wrap items-end gap-4">
-                      <div className="min-w-[200px] flex-1 space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Procedure</label>
+                {profile.surgeries?.map((surgery: any, index: number) => {
+                  const itemKey = surgery.id ? `surgery-${surgery.id}` : `temp-surgery-${index}`;
+                  const isOperating = operatingOnItem === itemKey;
+                  return (
+                    <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
+                      <div className="flex flex-wrap items-end gap-4">
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Procedure</label>
+                          <input 
+                            type="text" 
+                            value={surgery.procedure || ''} 
+                            onChange={(e) => updateListItem('surgeries', index, 'procedure', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <div className="min-w-[150px] space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Date</label>
+                          <input 
+                            type="date" 
+                            value={surgery.datePerformed ? surgery.datePerformed.split('T')[0] : ''} 
+                            onChange={(e) => updateListItem('surgeries', index, 'datePerformed', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <button 
+                          onClick={() => surgery.id && deleteItemWithSave('surgeries', surgery.id, surgery.procedure)}
+                          disabled={isOperating || !surgery.id}
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                        >
+                          {isOperating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                        </button>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Hospital</label>
                         <input 
                           type="text" 
-                          value={surgery.procedure || ''} 
-                          onChange={(e) => updateListItem('surgeries', index, 'procedure', e.target.value)}
+                          value={surgery.hospital || ''} 
+                          onChange={(e) => updateListItem('surgeries', index, 'hospital', e.target.value)}
                           className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
                         />
                       </div>
-                      <div className="min-w-[150px] space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Date</label>
-                        <input 
-                          type="date" 
-                          value={surgery.datePerformed ? surgery.datePerformed.split('T')[0] : ''} 
-                          onChange={(e) => updateListItem('surgeries', index, 'datePerformed', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Notes</label>
+                        <textarea 
+                          value={surgery.notes || ''} 
+                          onChange={(e) => updateListItem('surgeries', index, 'notes', e.target.value)}
+                          className="min-h-[80px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none"
                         />
                       </div>
-                      <button onClick={() => removeItem('surgeries', index)} className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Hospital</label>
-                      <input 
-                        type="text" 
-                        value={surgery.hospital || ''} 
-                        onChange={(e) => updateListItem('surgeries', index, 'hospital', e.target.value)}
-                        className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Notes</label>
-                      <textarea 
-                        value={surgery.notes || ''} 
-                        onChange={(e) => updateListItem('surgeries', index, 'notes', e.target.value)}
-                        className="min-h-[80px] w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none"
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <button 
                   onClick={() => addItem('surgeries', { procedure: '', datePerformed: '', hospital: '', notes: '' })}
                   className="mt-4 flex items-center gap-2 rounded-xl border border-dashed border-neutral-300 px-4 py-3 text-sm font-bold text-[#8d8374] hover:bg-neutral-50"
@@ -518,54 +700,62 @@ export default function ProfilePage() {
             </button>
             {!collapsedSections.contacts && (
               <div className="mt-8 space-y-4 animate-in fade-in duration-300">
-                {profile.emergencyContacts?.map((contact: any, index: number) => (
-                  <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
-                    <div className="flex flex-wrap items-end gap-4">
-                      <div className="min-w-[200px] flex-1 space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Name</label>
-                        <input 
-                          type="text" 
-                          value={contact.name || ''} 
-                          onChange={(e) => updateListItem('emergencyContacts', index, 'name', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                        />
+                {profile.emergencyContacts?.map((contact: any, index: number) => {
+                  const itemKey = contact.id ? `contact-${contact.id}` : `temp-contact-${index}`;
+                  const isOperating = operatingOnItem === itemKey;
+                  return (
+                    <div key={index} className="space-y-4 rounded-[1.5rem] border border-neutral-100 bg-[#fbf8f2]/50 p-5">
+                      <div className="flex flex-wrap items-end gap-4">
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Name</label>
+                          <input 
+                            type="text" 
+                            value={contact.name || ''} 
+                            onChange={(e) => updateListItem('emergencyContacts', index, 'name', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <div className="min-w-[150px] space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Relationship</label>
+                          <input 
+                            type="text" 
+                            value={contact.relationship || ''} 
+                            onChange={(e) => updateListItem('emergencyContacts', index, 'relationship', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <button 
+                          onClick={() => contact.id && deleteItemWithSave('emergencyContacts', contact.id, contact.name)}
+                          disabled={isOperating || !contact.id}
+                          className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                        >
+                          {isOperating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                        </button>
                       </div>
-                      <div className="min-w-[150px] space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Relationship</label>
-                        <input 
-                          type="text" 
-                          value={contact.relationship || ''} 
-                          onChange={(e) => updateListItem('emergencyContacts', index, 'relationship', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                        />
+                      <div className="flex flex-wrap items-end gap-4">
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Mobile</label>
+                          <input 
+                            type="tel" 
+                            placeholder="+639171234567"
+                            value={contact.mobile || ''} 
+                            onChange={(e) => updateListItem('emergencyContacts', index, 'mobile', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
+                        <div className="min-w-[200px] flex-1 space-y-2">
+                          <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Email (optional)</label>
+                          <input 
+                            type="email" 
+                            value={contact.email || ''} 
+                            onChange={(e) => updateListItem('emergencyContacts', index, 'email', e.target.value)}
+                            className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
+                          />
+                        </div>
                       </div>
-                      <button onClick={() => removeItem('emergencyContacts', index)} className="flex h-11 w-11 items-center justify-center rounded-xl text-neutral-400 hover:text-red-500 transition-colors">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
                     </div>
-                    <div className="flex flex-wrap items-end gap-4">
-                      <div className="min-w-[200px] flex-1 space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Mobile</label>
-                        <input 
-                          type="tel" 
-                          placeholder="+639171234567"
-                          value={contact.mobile || ''} 
-                          onChange={(e) => updateListItem('emergencyContacts', index, 'mobile', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                        />
-                      </div>
-                      <div className="min-w-[200px] flex-1 space-y-2">
-                        <label className="text-[9px] font-bold uppercase tracking-widest text-[#8d8374]">Email (optional)</label>
-                        <input 
-                          type="email" 
-                          value={contact.email || ''} 
-                          onChange={(e) => updateListItem('emergencyContacts', index, 'email', e.target.value)}
-                          className="w-full rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm outline-none" 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <button 
                   onClick={() => addItem('emergencyContacts', { name: '', relationship: '', mobile: '', email: '' })}
                   className="mt-4 flex items-center gap-2 rounded-xl border border-dashed border-neutral-300 px-4 py-3 text-sm font-bold text-[#8d8374] hover:bg-neutral-50"
