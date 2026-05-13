@@ -13,9 +13,9 @@ import { sendSms } from '@/lib/sms';
 
 export async function GET(
   req: Request,
-  { params }: { params: { uuid: string } }
+  { params }: { params: Promise<{ uuid: string }> }
 ): Promise<Response> {
-  const { uuid } = params;
+  const { uuid } = await params;
 
   try {
     // 1. Find the patient profile by QR UUID
@@ -72,7 +72,7 @@ export async function GET(
  *
  * @param patientProfileId - The ID of the patient profile whose contacts should be notified.
  */
-export async function notifyEmergencyContacts(patientProfileId: string) {
+async function notifyEmergencyContacts(patientProfileId: string) {
   try {
     const profile = await prisma.patientProfile.findUnique({
       where: { id: patientProfileId },

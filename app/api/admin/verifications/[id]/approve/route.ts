@@ -17,14 +17,15 @@ import { sendEmail } from '@/lib/mailer';
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
     const session = await requireRole(req, 'ADMIN');
+    const { id } = await params;
 
     // Find the professional profile
     const profile = await prisma.professionalProfile.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: { user: { select: { id: true, email: true, firstName: true } } },
     });
 
@@ -42,7 +43,7 @@ export async function POST(
 
     // Update profile: set verified + store hashed PIN
     await prisma.professionalProfile.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         prcStatus: 'VERIFIED',
         pin: hashedPin,

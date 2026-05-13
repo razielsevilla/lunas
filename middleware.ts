@@ -27,7 +27,27 @@ const PROTECTED_ROUTES: RouteRule[] = [
     redirectTo: '/login',
   },
   {
-    prefix: '/admin',
+    prefix: '/overview',
+    allowedRoles: ['ADMIN'],
+    redirectTo: '/login',
+  },
+  {
+    prefix: '/audit-logs',
+    allowedRoles: ['ADMIN'],
+    redirectTo: '/login',
+  },
+  {
+    prefix: '/users',
+    allowedRoles: ['ADMIN'],
+    redirectTo: '/login',
+  },
+  {
+    prefix: '/verifications',
+    allowedRoles: ['ADMIN'],
+    redirectTo: '/login',
+  },
+  {
+    prefix: '/system-health',
     allowedRoles: ['ADMIN'],
     redirectTo: '/login',
   },
@@ -147,7 +167,7 @@ function getDashboardUrl(role: string): string {
     case 'PROFESSIONAL':
       return '/professional/dashboard';
     case 'ADMIN':
-      return '/admin/overview';
+      return '/overview';
     default:
       return '/';
   }
@@ -158,6 +178,7 @@ function getDashboardUrl(role: string): string {
 // ---------------------------------------------------------------------------
 
 export const config = {
+  runtime: 'nodejs',
   matcher: [
     /*
      * Match all request paths EXCEPT:

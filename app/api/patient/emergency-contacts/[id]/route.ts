@@ -7,10 +7,11 @@ import { requireRole, toAuthErrorResponse } from '@/lib/auth';
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
     const session = await requireRole(req, 'PATIENT');
+    const { id } = await params;
 
     const profile = await prisma.patientProfile.findUnique({
       where: { userId: session.user.id },
@@ -22,14 +23,14 @@ export async function DELETE(
     }
 
     const contact = await prisma.emergencyContact.findFirst({
-      where: { id: params.id, patientProfileId: profile.id },
+      where: { id, patientProfileId: profile.id },
     });
 
     if (!contact) {
       return Response.json({ error: 'Emergency contact not found.' }, { status: 404 });
     }
 
-    await prisma.emergencyContact.delete({ where: { id: params.id } });
+    await prisma.emergencyContact.delete({ where: { id } });
 
     return Response.json({ message: 'Emergency contact removed.' });
   } catch (err) {

@@ -7,10 +7,11 @@ import { requireRole, toAuthErrorResponse } from '@/lib/auth';
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
     const session = await requireRole(req, 'PATIENT');
+    const { id } = await params;
 
     // Ensure the allergy belongs to this patient before deleting
     const profile = await prisma.patientProfile.findUnique({
@@ -23,14 +24,14 @@ export async function DELETE(
     }
 
     const allergy = await prisma.allergy.findFirst({
-      where: { id: params.id, patientProfileId: profile.id },
+      where: { id, patientProfileId: profile.id },
     });
 
     if (!allergy) {
       return Response.json({ error: 'Allergy not found.' }, { status: 404 });
     }
 
-    await prisma.allergy.delete({ where: { id: params.id } });
+    await prisma.allergy.delete({ where: { id } });
 
     return Response.json({ message: 'Allergy removed.' });
   } catch (err) {
