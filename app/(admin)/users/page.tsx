@@ -1,8 +1,6 @@
 "use client";
 
 import type { TableColumn } from '@/components/ui/Table';
-
-import { AdminLayout } from "@/components/layout/AdminLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Table } from "@/components/ui/Table";
 
@@ -24,40 +22,69 @@ const columns: TableColumn<UserRow>[] = [
   {
     key: 'name',
     label: 'NAME',
-    sortable: false,
-    render: (row) => <span className="text-[1.35rem] font-semibold text-[#0D152B]">{row.name}</span>,
+    headerClassName: 'bg-[#F3ECE4] text-[12px] font-bold tracking-wider text-[#8b8780] uppercase',
+    render: (row) => (
+      <span className="font-sans font-bold text-[#0D152B]">
+        {row.name}
+      </span>
+    ),
   },
   {
     key: 'email',
     label: 'EMAIL',
-    sortable: false,
-    render: (row) => <span className="text-lg text-[#2f3f5a]">{row.email}</span>,
+    headerClassName: 'bg-[#F3ECE4] text-[12px] font-bold tracking-wider text-[#8b8780] uppercase',
+    render: (row) => (
+      <span className="font-sans text-[#64748b]">
+        {row.email}
+      </span>
+    ),
   },
   {
     key: 'role',
     label: 'ROLE',
-    sortable: false,
-    render: (row) => <span className="text-[1.1rem] text-[#0D152B]">{row.role}</span>,
+    headerClassName: 'bg-[#F3ECE4] text-[12px] font-bold tracking-wider text-[#8b8780] uppercase',
+    render: (row) => (
+      <span className="font-sans text-[#64748b]">
+        {row.role}
+      </span>
+    ),
   },
   {
     key: 'status',
     label: 'STATUS',
-    sortable: false,
-    render: (row) => <StatusBadge status={row.status} className="text-[0.83rem]" />,
+    headerClassName: 'bg-[#F3ECE4] text-[12px] font-bold tracking-wider text-[#8b8780] uppercase',
+    render: (row) => (
+      <StatusBadge 
+        status={row.status} 
+        className="px-3 py-1 text-sm font-medium" 
+      />
+    ),
   },
 ];
 
 export default function UsersPage() {
   return (
-    <AdminLayout activePath="/users">
-      <section className="min-h-full bg-[#FDF9F3] p-12">
-        <header className="mb-8 space-y-2">
-          <h1 className="font-serif text-5xl font-semibold tracking-tight text-[#0D152B]">Users</h1>
-          <p className="text-2xl text-[#2f3f5a]">All accounts on the platform.</p>
+    <div className="mx-auto w-full max-w-6xl px-12 py-12">
+      <div className="space-y-8">
+        {/* Page Header */}
+        <header className="text-left">
+          <h1 className="font-serif text-[2.75rem] font-bold tracking-tight text-[#0D152B]">
+            Users
+          </h1>
+          <p className="mt-1 font-sans text-lg text-[#64748b]">
+            All accounts on the platform.
+          </p>
         </header>
 
-        <Table columns={columns} data={users} className="rounded-[24px] border-neutral-200 bg-[#FDF9F3]" rowClassName="hover:bg-[#F8F1E8]" />
-      </section>
-    </AdminLayout>
+        {/* The Data Table */}
+        <div className="rounded-2xl border border-neutral-200 bg-white overflow-hidden">
+          <Table
+            columns={columns}
+            data={users}
+            rowClassName="border-b border-neutral-100 last:border-0 hover:bg-transparent"
+          />
+        </div>
+      </div>
+    </div>
   );
 }

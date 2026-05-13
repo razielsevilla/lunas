@@ -1,3 +1,5 @@
+"use client";
+
 import { Activity, ShieldAlert } from 'lucide-react';
 
 const metrics = [
