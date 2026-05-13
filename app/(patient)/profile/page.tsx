@@ -9,7 +9,7 @@ import {
 
 export default function ProfilePage() {
   return (
-    <PatientLayout activePath="/profile">
+    <PatientLayout activePath="/patient/profile">
       <div className="mx-auto max-w-5xl space-y-8">
         
         {/* Header Section */}

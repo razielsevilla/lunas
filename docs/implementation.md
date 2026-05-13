@@ -139,19 +139,19 @@ Hour 2–4:
 **Track: Auth pages + Patient dashboard skeleton**
 
 Hour 1–2:
-- [ ] `components/ui/` — Button, Input, Card, Badge, Spinner (Tailwind-based)
-- [ ] `components/layout/PatientLayout.tsx` — sidebar nav (Dashboard, Medical Profile, QR Code, Access Logs, Logout)
-- [ ] `app/(auth)/register/patient/page.tsx` — patient registration form
+- [x] `components/ui/` — Button, Input, Card, Badge, Spinner (Tailwind-based)
+- [x] `components/layout/PatientLayout.tsx` — sidebar nav (Dashboard, Medical Profile, QR Code, Access Logs, Logout)
+- [x] `app/(auth)/register/patient/page.tsx` — patient registration form
 
 Hour 2–4:
-- [ ] `app/(auth)/login/page.tsx` — login form (shared for all roles, redirect by role after login)
-- [ ] `app/(patient)/dashboard/page.tsx` — skeleton: profile completion %, QR status, recent access (mock data OK)
-- [ ] `app/(patient)/profile/page.tsx` — skeleton with sections: Basic Info, Allergies, Medications, Surgeries, Emergency Contacts
+- [x] `app/(auth)/login/page.tsx` — login form (shared for all roles, redirect by role after login)
+- [x] `app/(patient)/dashboard/page.tsx` — skeleton: profile completion %, QR status, recent access (mock data OK)
+- [x] `app/(patient)/profile/page.tsx` — skeleton with sections: Basic Info, Allergies, Medications, Surgeries, Emergency Contacts
 
 Hour 4–5:
-- [ ] Wire registration and login pages to Auth API (`/api/auth/*`)
-- [ ] Confirm login → redirect to `/patient/dashboard`
-- [ ] Confirm `GET /api/auth/me` drives the dashboard user display
+- [x] Wire registration and login pages to Auth API (`/api/auth/*`)
+- [x] Confirm login → redirect to `/patient/dashboard`
+- [x] Confirm `GET /api/auth/me` drives the dashboard user display
 
 ---
 

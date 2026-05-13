@@ -53,11 +53,11 @@ export default function LoginPage() {
 
       // Successful Login: Redirect based on role returned by your API
       if (data.role === "PATIENT") {
-        router.push("/dashboard");
+        router.push("/patient/dashboard");
       } else if (data.role === "PROFESSIONAL") {
-        router.push("/pro/dashboard");
+        router.push("/professional/dashboard");
       } else {
-        router.push("/admin");
+        router.push("/admin/overview");
       }
       
     } catch (err: any) {

@@ -1,7 +1,63 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { PatientLayout } from "@/components/layout/PatientLayout";
 import { CheckCircle2, Download, Printer, ArrowRight } from "lucide-react";
 
+type AuthMeResponse = {
+  firstName: string;
+  lastName: string;
+  role: string;
+};
+
+function getInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? '')
+    .join('') || 'MS';
+}
+
 export default function DashboardPage() {
+  const [displayName, setDisplayName] = useState('Maria Santos');
+  const [roleLabel, setRoleLabel] = useState('Patient');
+  const [avatarInitials, setAvatarInitials] = useState('MS');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadSessionUser = async () => {
+      try {
+        const response = await fetch('/api/auth/me', { cache: 'no-store' });
+
+        if (!response.ok) {
+          return;
+        }
+
+        const data = (await response.json()) as AuthMeResponse;
+        const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ').trim() || 'Maria Santos';
+
+        if (cancelled) {
+          return;
+        }
+
+        setDisplayName(fullName);
+        setAvatarInitials(getInitials(fullName));
+        setRoleLabel(data.role === 'PATIENT' ? 'Patient' : data.role);
+      } catch {
+        // Keep the default mock identity if the auth call fails.
+      }
+    };
+
+    void loadSessionUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // Mock data to match the visual reference
   const profileCompletion = 92;
   const lastUpdate = { date: "May 09, 2026", time: "14:22", relative: "2 days ago" };
@@ -29,7 +85,12 @@ export default function DashboardPage() {
   ];
 
   return (
-    <PatientLayout activePath="/dashboard">
+    <PatientLayout
+      activePath="/patient/dashboard"
+      displayName={displayName}
+      roleLabel={roleLabel}
+      avatarInitials={avatarInitials}
+    >
       <div className="space-y-10">
         
         {/* 1. Status Banner */}
