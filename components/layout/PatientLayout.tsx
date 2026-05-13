@@ -71,7 +71,7 @@ export function PatientLayout({
 
   return (
     <div className="min-h-screen bg-[#fbf8f2] text-[#1a1c1e]">
-      {/* Sidebar - Matching dark aesthetic from screenshot */}
+      {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-72 flex-col bg-[#0f172a] px-6 py-8 md:flex">
         {/* Logo Section */}
         <div className="flex items-center gap-3 px-2 pb-10">
@@ -102,18 +102,6 @@ export function PatientLayout({
       {/* Main Content Area */}
       <main className="min-h-screen md:pl-72">
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
-          {/* Header Bar */}
-          <header className="flex items-center justify-end bg-white/50 px-8 py-4 backdrop-blur-sm">
-            <div className="flex items-center gap-4">
-              <div className="text-right">
-                <p className="text-sm font-bold text-[#1a1c1e]">{displayName}</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">{roleLabel}</p>
-              </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1c1e] text-xs font-bold text-white">
-                {resolvedInitials}
-              </div>
-            </div>
-          </header>
 
           {/* Page Content */}
           <div className="flex-1 px-8 py-8 lg:px-12">
