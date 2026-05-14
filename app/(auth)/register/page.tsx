@@ -1,11 +1,258 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import { HeartPulse, Stethoscope, ArrowRight } from 'lucide-react';
+import { HeartPulse, Stethoscope, ArrowRight, Eye, EyeOff, Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { AuthCard } from "@/components/AuthCard";
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function RegisterPage() {
+export default function RegisterPageRoute() {
   return (
-    <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center p-4 font-sans">
-      <div className="max-w-5xl w-full bg-white rounded-[2rem] overflow-hidden flex shadow-2xl min-h-[600px]">
+    <Suspense fallback={<div className="min-h-screen bg-[#FDFBF7]" />}>
+      <RegisterPageInner />
+    </Suspense>
+  );
+}
+
+function RegisterPageInner() {
+  const router = useRouter();
+  const switchToRegister = () => router.push("/register");
+  const switchToLogin = () => router.push("/login");
+
+  return (
+    <AuthCard
+      initialView="register"
+      loginPanel={<LoginFormComponent onSwitchToRegister={switchToRegister} />}
+      registerPanel={<RegisterPageComponent onSwitchToLogin={switchToLogin} />}
+    />
+  );
+}
+
+// LoginForm Component for use in AuthCard
+function LoginFormComponent({ onSwitchToRegister }: { onSwitchToRegister: () => void }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect');
+  
+  // UI State
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [requiresPin, setRequiresPin] = useState(false);
+  const [pin, setPin] = useState("");
+
+  // Form State
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (error) setError(null);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requiresPin ? { ...formData, pin } : formData),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 403 && data.requiresPin) {
+        setRequiresPin(true);
+        setError(null);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      // Successful Login: Redirect based on role returned by your API
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else if (data.role === "PATIENT") {
+        router.push("/patient/dashboard");
+      } else if (data.role === "PROFESSIONAL") {
+        router.push("/professional/dashboard");
+      } else {
+        router.push("/overview");
+      }
+      
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex w-full min-h-[600px] bg-white">
+      {/* Left Column - Form */}
+      <main className="flex w-full flex-col p-8 md:p-16 lg:w-1/2">
+        <div className="mx-auto w-full max-w-md">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-amber-200 to-amber-500" />
+            <span className="text-xl font-bold text-[#0f172a]">Lunas</span>
+          </div>
+
+          <div className="mt-20">
+            <h1 className="text-5xl font-bold tracking-tight text-[#1a1c1e]">Sign In</h1>
+            <p className="mt-3 text-lg font-medium text-[#8d8374]">Enter your portal credentials</p>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mt-6 flex items-center gap-2 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-600 ring-1 ring-red-200 animate-in fade-in zoom-in-95">
+              <AlertCircle className="h-4 w-4" />
+              {error}
+            </div>
+          )}
+
+          <form className="mt-12 space-y-6" onSubmit={handleLogin}>
+            {requiresPin ? (
+              <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
+                <div className="pt-2">
+                  <p className="text-sm font-semibold text-[#1a1c1e] mb-4 text-center">Medical Access PIN</p>
+                  <label htmlFor="pin-input" className="flex justify-center space-x-3 cursor-pointer">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-xl font-bold transition-colors ${
+                          i < pin.length
+                            ? 'bg-[#1a1c1e] text-white border-[#1a1c1e] shadow-md'
+                            : 'border-neutral-300 text-transparent hover:border-neutral-400 bg-white'
+                        }`}
+                      >
+                        {i < pin.length ? '●' : ''}
+                      </div>
+                    ))}
+                  </label>
+                  <input
+                    id="pin-input"
+                    type="text"
+                    inputMode="numeric"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    className="sr-only"
+                    maxLength={6}
+                    autoFocus
+                  />
+                  <p className="text-center text-[11px] text-[#8d8374] mt-4">Please verify your identity to access the portal.</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Email</label>
+                  <div className="relative">
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
+                      <Mail className="h-4 w-4" />
+                    </span>
+                    <input 
+                      name="email"
+                      type="email" 
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="name@clinic.com"
+                      className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all" 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Password</label>
+                  <div className="relative">
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
+                      <Lock className="h-4 w-4" />
+                    </span>
+                    <input 
+                      name="password"
+                      type={showPassword ? "text" : "password"} 
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#1a1c1e]"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <div className="flex justify-end pt-1">
+                    <Link href="/contact" className="text-[11px] font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <button 
+              type="submit"
+              disabled={isLoading || (requiresPin && pin.length !== 6)}
+              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0f172a] py-4 text-sm font-bold text-white transition-all hover:bg-[#1e293b] active:scale-[0.98] disabled:bg-neutral-400"
+            >
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <>
+                  {requiresPin ? "Verify PIN" : "Access Portal"} <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+            
+            <p className="text-center text-sm font-medium text-[#8d8374]">
+              New here? <button type="button" onClick={onSwitchToRegister} className="font-bold text-[#1a1c1e] hover:underline">Create an account</button>
+            </p>
+          </form>
+        </div>
+      </main>
+
+      {/* Right Column - Branding */}
+      <div className="relative hidden w-1/2 flex-col items-center justify-center bg-[#0f172a] p-12 lg:flex">
+        <div className="absolute inset-0 opacity-20" 
+             style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} 
+        />
+        <div className="relative z-10 flex flex-col items-center text-center">
+          <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
+            <Stethoscope className="h-8 w-8 text-white" />
+          </div>
+          <h2 className="text-5xl font-bold tracking-tight text-white leading-tight">Join Lunas</h2>
+          <p className="mt-6 max-w-xs text-lg text-white/60 leading-relaxed">
+            Be part of a safer, smarter way to carry your medical record.
+          </p>
+          <button 
+            type="button"
+            onClick={onSwitchToRegister}
+            className="mt-10 rounded-full border border-white/20 bg-white/5 px-8 py-3 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/10"
+          >
+            Create Account
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Register Page Component
+function RegisterPageComponent({ onSwitchToLogin }: { onSwitchToLogin?: () => void }) {
+  return (
+    <div className="flex w-full min-h-[600px] bg-white">
         
         {/* Left Section: Branding & Pattern (Referencing Screenshot 2026-05-14 050715.png) */}
         <div className="relative w-1/2 bg-[#001F2D] p-12 flex flex-col items-center justify-center text-center text-white overflow-hidden">
@@ -81,9 +328,21 @@ export default function RegisterPage() {
             </div>
           </div>
           
-          {/* Administrator text removed as requested */}
+          {/* Sign In Button */}
+          {onSwitchToLogin && (
+            <div className="pt-8 border-t border-slate-200">
+              <p className="text-center text-sm font-medium text-slate-500 mb-4">
+                Already have an account?
+              </p>
+              <button 
+                onClick={onSwitchToLogin}
+                className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-8 py-3 text-sm font-bold text-slate-700 transition-all hover:bg-slate-100"
+              >
+                Sign In
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  );
+    );
 }
