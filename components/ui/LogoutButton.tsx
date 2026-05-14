@@ -31,11 +31,17 @@ export function LogoutButton({ variant = "sidebar", className = "" }: LogoutButt
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/logout", { method: "POST" });
+      const res = await fetch("/api/auth/logout", { 
+        method: "POST",
+        credentials: "include" // Ensure cookies are sent and received
+      });
       if (!res.ok) throw new Error("Logout failed");
+      
+      // Wait a moment to ensure Set-Cookie is processed, then redirect
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       // Hard navigation to clear all client state
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     } catch {
       setError("Something went wrong. Please try again.");
       setIsLoading(false);

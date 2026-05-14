@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { verifyPassword, verifyPin } from '@/lib/auth';
 import { createSession, buildSessionCookie } from '@/lib/session';
@@ -80,26 +81,24 @@ export async function POST(req: Request): Promise<Response> {
     // 4. Create session in DB
     const token = await createSession(user.id);
 
-    // 5. Build response with Set-Cookie header
+    // 5. Build response with Set-Cookie header using NextResponse
     const cookieString = buildSessionCookie(token);
 
-    return new Response(
-      JSON.stringify({
+    const response = NextResponse.json(
+      {
         userId: user.id,
         role: user.role,
         firstName: user.firstName,
-      }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Set-Cookie': cookieString,
-        },
-      }
+      },
+      { status: 200 }
     );
+
+    response.headers.set('Set-Cookie', cookieString);
+
+    return response;
   } catch (err) {
     console.error('[auth/login]', err);
-    return Response.json(
+    return NextResponse.json(
       { error: 'An internal server error occurred.' },
       { status: 500 }
     );

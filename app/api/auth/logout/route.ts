@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import { deleteSession } from '@/lib/session';
 
 // ---------------------------------------------------------------------------
@@ -9,19 +10,18 @@ export async function POST(req: Request): Promise<Response> {
     // Delete DB session record and get a cookie-clearing string
     const clearCookie = await deleteSession(req);
 
-    return new Response(
-      JSON.stringify({ message: 'Logged out.' }),
-      {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'Set-Cookie': clearCookie,
-        },
-      }
+    const response = NextResponse.json(
+      { message: 'Logged out.' },
+      { status: 200 }
     );
+
+    // Set the cookie clearing header using NextResponse API
+    response.headers.set('Set-Cookie', clearCookie);
+
+    return response;
   } catch (err) {
     console.error('[auth/logout]', err);
-    return Response.json(
+    return NextResponse.json(
       { error: 'An internal server error occurred.' },
       { status: 500 }
     );
