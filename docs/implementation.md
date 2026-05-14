@@ -334,14 +334,14 @@ Using the real API now (not mock data).
 - [x] Test the admin approve flow: approve → PIN generated → PIN emailed to professional
 
 ### Dev C
-- [ ] Polish patient profile form UX (loading states, success toasts, error messages)
-- [ ] Add drug interaction warnings inline in the Medications section
-- [ ] Ensure profile completion percentage updates on save
+- [x] Polish patient profile form UX (loading states, success toasts, error messages)
+- [x] Add drug interaction warnings inline in the Medications section
+- [x] Ensure profile completion percentage updates on save
 
 ### Dev D
-- [ ] Polish the emergency view — make it look excellent for the demo
-- [ ] Add a "QR Scanner" page using device camera (use `jsQR` library or `react-zxing`)
-- [ ] Test: scan a real printed/displayed QR code → lands on correct PIN entry page
+- [x] Polish the emergency view — make it look excellent for the demo
+- [x] Add a "QR Scanner" page using device camera (use `jsQR` library or `react-zxing`)
+- [x] Test: scan a real printed/displayed QR code → lands on correct PIN entry page
 
 ### Dev E
 - [ ] Wire admin verifications approve/reject with real API

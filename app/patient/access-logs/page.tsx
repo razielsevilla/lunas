@@ -4,8 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Badge } from '@/components/ui/Badge';
-import { Spinner } from '@/components/ui/Spinner';
 import { Table, type TableColumn } from '@/components/ui/Table';
+import LunasLoader from '@/components/ui/loader'; // Updated import
 
 type AccessLog = {
   id: string;
@@ -115,28 +115,37 @@ export default function PatientAccessLogsPage() {
     [],
   );
 
+  // Full-page loader while data is fetching
+  if (isLoading) {
+    return (
+      <PatientLayout activePath="/patient/access-logs">
+        <div className="flex h-[60vh] w-full items-center justify-center">
+          <LunasLoader />
+        </div>
+      </PatientLayout>
+    );
+  }
+
   return (
     <PatientLayout activePath="/patient/access-logs">
-      <div className="mx-auto max-w-6xl space-y-8">
+      <div className="mx-auto max-w-6xl space-y-8 animate-in fade-in duration-700">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">Access Logs</h1>
           <p className="mt-2 text-sm text-[#8d8374]">A history of who opened your medical passport.</p>
         </div>
 
-        {isLoading ? (
-          <div className="flex min-h-[18rem] items-center justify-center rounded-[2rem] border border-neutral-200 bg-white">
-            <Spinner size="lg" label="Loading access logs" />
-          </div>
-        ) : error ? (
+        {error ? (
           <div className="rounded-[2rem] border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>
         ) : (
-          <Table
-            columns={columns}
-            data={logs}
-            emptyState="No access logs yet."
-            initialSortKey="accessedAt"
-            initialSortDirection="desc"
-          />
+          <div className="rounded-[2.5rem] border border-neutral-200 bg-white p-6 shadow-sm">
+            <Table
+              columns={columns}
+              data={logs}
+              emptyState="No access logs yet."
+              initialSortKey="accessedAt"
+              initialSortDirection="desc"
+            />
+          </div>
         )}
       </div>
     </PatientLayout>

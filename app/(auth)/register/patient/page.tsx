@@ -114,7 +114,8 @@ export default function PatientRegistration() {
     setError(null);
 
     try {
-      const response = await fetch("/api/auth/register/patient", {
+      // 1. Perform the Registration
+      const regResponse = await fetch("/api/auth/register/patient", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -123,9 +124,26 @@ export default function PatientRegistration() {
         }),
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Registration failed.");
-      router.push("/login?registered=true");
+      const regData = await regResponse.json();
+      if (!regResponse.ok) throw new Error(regData.error || "Registration failed.");
+
+      // 2. Automatically Log In
+      const loginResponse = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (loginResponse.ok) {
+        // Redirect directly to dashboard
+        router.push("/patient/dashboard");
+      } else {
+        // Fallback to login page if auto-login fails
+        router.push("/login?registered=true");
+      }
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -227,7 +245,7 @@ export default function PatientRegistration() {
                   <label className="text-[10px] font-bold uppercase text-[#8d8374]">Password</label>
                   <div className="relative">
                     <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                    <input name="password" value={formData.password} onChange={handleChange} type={showPassword ? "text" : "password"} className="w-full rounded-2xl border border-neutral-200 px-12 py-4 text-sm outline-none [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" />
+                    <input name="password" value={formData.password} onChange={handleChange} type={showPassword ? "text" : "password"} className="w-full rounded-2xl border border-neutral-200 px-12 py-4 text-sm outline-none" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-neutral-400">
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -238,7 +256,7 @@ export default function PatientRegistration() {
                   <label className="text-[10px] font-bold uppercase text-[#8d8374]">Confirm Password</label>
                   <div className="relative">
                     <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                    <input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type={showConfirmPassword ? "text" : "password"} className="w-full rounded-2xl border border-neutral-200 px-12 py-4 text-sm outline-none [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" />
+                    <input name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} type={showConfirmPassword ? "text" : "password"} className="w-full rounded-2xl border border-neutral-200 px-12 py-4 text-sm outline-none" />
                     <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-5 top-1/2 -translate-y-1/2 text-neutral-400">
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
