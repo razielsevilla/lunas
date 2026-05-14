@@ -10,7 +10,11 @@ import { ScrollRevealFeatures } from "@/components/ScrollRevealFeatures";
 import { ProblemSolution } from "@/components/ProblemSolution";
 import { HowItWorks } from "@/components/HowItWorks";
 import { FAQTestimonials } from "@/components/FAQTestimonials";
+import { MockupImages } from "@/components/MockupImages";
+import { TextReveal } from "@/components/TextReveal";
+import { HorizontalGallery } from "@/components/HorizontalGallery";
 import { Hero } from "@/components/Hero";
+import { Header } from "@/components/Header";
 import {
   Mail,
   ArrowRight,
@@ -31,43 +35,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-ivory font-sans">
       {/* ═══════════════ HEADER ═══════════════ */}
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Logo variant="light" />
-        <nav className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
-          <a
-            href="#features"
-            className="transition-colors hover:text-foreground"
-          >
-            Features
-          </a>
-          <a
-            href="#why"
-            className="transition-colors hover:text-foreground"
-          >
-            Why Lunas
-          </a>
-          <a href="#how" className="transition-colors hover:text-foreground">
-            How it Works
-          </a>
-          <a href="#trust" className="transition-colors hover:text-foreground">
-            Trust &amp; Security
-          </a>
-        </nav>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/login"
-            className="text-sm font-medium text-foreground transition-colors hover:text-golden"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/register"
-            className="rounded-full bg-night px-5 py-2 text-sm font-semibold text-white transition-all hover:shadow-glow"
-          >
-            Get started
-          </Link>
-        </div>
-      </header>
+      <Header />
 
       {/* ═══════════════ HERO ═══════════════ */}
       <Hero />
@@ -75,11 +43,17 @@ export default function HomePage() {
       {/* ═══════════════ FEATURES ═══════════════ */}
       <ScrollRevealFeatures />
 
+
       {/* ═══════════════ PROBLEM & SOLUTION ═══════════════ */}
       <ProblemSolution />
 
       {/* ═══════════════ HOW IT WORKS ═══════════════ */}
       <HowItWorks />
+
+      {/* ═══════════════ MOCKUP SHOWCASE ═══════════════ */}
+      <MockupImages />
+      <TextReveal />
+      <HorizontalGallery />
       <FAQTestimonials />
 
       {/* ═══════════════ TRUST ═══════════════ */}
