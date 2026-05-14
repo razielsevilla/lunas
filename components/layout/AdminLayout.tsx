@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import {
   Activity,
   ClipboardList,
@@ -61,6 +62,18 @@ function NavigationLink({ item, active }: { item: NavItem; active: boolean }) {
 }
 
 export function AdminLayout({ children, activePath }: AdminLayoutProps) {
+  const pathname = usePathname();
+
+  const isActiveLink = (href: string) => {
+    const currentPath = activePath ?? pathname;
+
+    if (currentPath === href) {
+      return true;
+    }
+
+    return currentPath.startsWith(href + '/');
+  };
+
   return (
     <div className="min-h-screen bg-[#fbf8f2] text-[#1a1c1e]">
       <aside
@@ -87,7 +100,7 @@ export function AdminLayout({ children, activePath }: AdminLayoutProps) {
             <NavigationLink
               key={item.href}
               item={item}
-              active={activePath ? activePath === item.href : false}
+              active={isActiveLink(item.href)}
             />
           ))}
         </nav>
@@ -97,13 +110,7 @@ export function AdminLayout({ children, activePath }: AdminLayoutProps) {
         </div>
       </aside>
 
-      <main className="min-h-screen md:pl-72">
-        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
-          <div className="flex-1 px-8 py-8 lg:px-12">
-            {children}
-          </div>
-        </div>
-      </main>
+      <main className="min-h-screen md:pl-72">{children}</main>
     </div>
   );
 }

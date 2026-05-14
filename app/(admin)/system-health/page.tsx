@@ -110,7 +110,7 @@ export default function SystemHealthPage() {
   }, [fetchHealth]);
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] px-12 py-12">
+    <div className="min-h-screen bg-[#FAF7F2] px-10 py-10">
       <div className="mx-auto w-full max-w-6xl">
         {/* Page Header */}
         <header className="mb-12 text-left">

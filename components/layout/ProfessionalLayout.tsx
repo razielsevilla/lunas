@@ -9,6 +9,14 @@ import { LogoutButton } from '@/components/ui/LogoutButton';
 export default function ProfessionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  const isActiveLink = (href: string) => {
+    if (pathname === href) {
+      return true;
+    }
+
+    return pathname.startsWith(href + '/');
+  };
+
   const navItems = [
     { 
       name: 'Dashboard', 
@@ -56,7 +64,7 @@ export default function ProfessionalLayout({ children }: { children: React.React
 
         <nav className="flex flex-1 flex-col gap-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isActiveLink(item.href);
             return (
               <Link
                 key={item.name}
@@ -86,7 +94,7 @@ export default function ProfessionalLayout({ children }: { children: React.React
 
       <main className="min-h-screen md:pl-72">
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
-          <div className="flex-1 px-8 py-8 lg:px-12">
+          <div className="flex-1 px-10 py-10">
             {children}
           </div>
         </div>

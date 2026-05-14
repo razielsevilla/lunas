@@ -1,5 +1,8 @@
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { 
   LayoutDashboard, 
   UserCircle, 
@@ -71,7 +74,18 @@ export function PatientLayout({
   roleLabel = 'Patient',
   avatarInitials,
 }: PatientLayoutProps) {
+  const pathname = usePathname();
   const resolvedInitials = avatarInitials ?? getInitials(displayName);
+
+  const isActiveLink = (href: string) => {
+    const currentPath = activePath ?? pathname;
+
+    if (currentPath === href) {
+      return true;
+    }
+
+    return currentPath.startsWith(href + '/');
+  };
 
   return (
     <div className="min-h-screen bg-[#fbf8f2] text-[#1a1c1e]">
@@ -101,7 +115,7 @@ export function PatientLayout({
             <NavigationLink 
               key={item.href} 
               item={item} 
-              active={activePath === item.href} 
+              active={isActiveLink(item.href)} 
             />
           ))}
         </nav>
@@ -117,7 +131,7 @@ export function PatientLayout({
         <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
 
           {/* Page Content */}
-          <div className="flex-1 px-8 py-8 lg:px-12">
+          <div className="flex-1 px-10 py-10">
             {children}
           </div>
         </div>
