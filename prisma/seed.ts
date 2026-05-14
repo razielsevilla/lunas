@@ -137,7 +137,7 @@ async function upsertProfessional(data: {
   hospitalAffil: string;
 }) {
   const passwordHash = await bcrypt.hash('Doctor#1234', 12);
-  const pinHash = await bcrypt.hash('482910', 12);
+  const pinHash = await bcrypt.hash('123456', 12);
 
   const user = await prisma.user.upsert({
     where: { email: data.email },
