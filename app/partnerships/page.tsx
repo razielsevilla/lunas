@@ -1,37 +1,44 @@
 "use client";
 
-/**
- * Cookie Policy — Lunas
- * Redesigned to match the Problem & Solution aesthetic.
- */
-
+import React, { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  ShieldCheck, 
-  Settings, 
-  Database,
-  MapPin,
-  Cookie
+import {
+  ArrowLeft,
+  Building2,
+  ShieldPlus,
+  Network,
+  Send,
+  CheckCircle2,
+  MapPin
 } from "lucide-react";
 
-export default function CookiePolicyPage() {
-  const sections = [
+export default function PartnershipsPage() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  const partnerPillars = [
     {
-      icon: Cookie,
-      title: "Essential Cookies",
-      description: "These are strictly necessary for the website to function. They enable core features like security, network management, and accessibility.",
+      icon: Building2,
+      title: "Healthcare Providers",
+      description: "Integrate Lunas into your hospital or clinic to streamline patient onboarding and emergency response.",
+      detail: "Hospitals & Clinics",
     },
     {
-      icon: Database,
-      title: "Performance Tracking",
-      description: "We use these to understand how visitors interact with our site, helping us discover which pages are most and least popular.",
+      icon: ShieldPlus,
+      title: "Insurance Partners",
+      description: "Offer Lunas as a premium value-add to your policyholders, ensuring their safety worldwide.",
+      detail: "Health Insurance",
     },
     {
-      icon: Settings,
-      title: "User Preferences",
-      description: "These allow our website to remember choices you make (such as your region) to provide a more personalized experience.",
+      icon: Network,
+      title: "Technology Integrators",
+      description: "Connect your health-tech solutions with our secure medical passport API infrastructure.",
+      detail: "API & SDK Access",
     },
   ];
 
@@ -60,26 +67,26 @@ export default function CookiePolicyPage() {
         </Link>
       </header>
 
-      {/* MAIN HERO SECTION (Split Aesthetic) */}
+      {/* MAIN CONTENT */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
-          {/* Left Column - High Impact Title */}
+
+          {/* Left Column - Context & Info */}
           <div className="space-y-8">
             <div>
               <h1 className="font-display text-5xl font-bold leading-[1.1] tracking-tighter text-night md:text-6xl lg:text-7xl">
-                Transparency <br />
-                <span className="text-golden italic">by design.</span>
+                Let&apos;s build <br />
+                <span className="text-golden italic">together.</span>
               </h1>
-              <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                We use cookies to improve your experience and ensure our platform remains secure. 
-                Learn how we handle your digital footprint.
+              <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80 text-balance">
+                Partner with Lunas to integrate secure medical passports into your
+                existing healthcare infrastructure. Together, we can save lives.
               </p>
             </div>
 
             {/* Quick Pillars */}
             <div className="space-y-6">
-              {sections.map((s, idx) => (
+              {partnerPillars.map((s, idx) => (
                 <div key={idx} className="group relative flex items-start gap-5 rounded-2xl border border-golden/10 bg-white/40 p-6 backdrop-blur-sm transition-all duration-500 hover:border-golden/30 hover:bg-white hover:shadow-soft-xl">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-golden/[0.05] text-golden/60 transition-colors group-hover:bg-golden/10 group-hover:text-golden">
                     <s.icon size={24} strokeWidth={1.2} />
@@ -91,73 +98,121 @@ export default function CookiePolicyPage() {
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground/70">
                       {s.description}
                     </p>
+                    <div className="mt-2 text-xs font-bold uppercase tracking-widest text-golden/60">
+                      {s.detail}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column - Detailed Policy */}
-          <div className="rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
-            <div className="max-w-none space-y-12 text-muted-foreground/90">
-              <div className="space-y-2 border-b border-night/5 pb-8">
-                <h2 className="font-display text-3xl font-bold text-night">Cookie Policy</h2>
-                <p className="text-sm font-medium uppercase tracking-widest text-golden/60">Last Updated: May 14, 2026</p>
-              </div>
+          {/* Right Column - Contact Form */}
+          <div className="relative">
+            {/* Subtle glow behind the form */}
+            <div className="absolute -inset-4 rounded-[3rem] bg-golden/5 blur-2xl" />
 
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">01</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">What are cookies?</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  Cookies are small text files that are placed on your computer by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
-                </p>
-              </section>
+            <div className="relative rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
+              {!submitted ? (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2 border-b border-night/5 pb-8">
+                    <h2 className="font-display text-3xl font-bold text-night">Partner Inquiry</h2>
+                    <p className="text-sm text-muted-foreground/60">Tell us about your organization and how we can collaborate.</p>
+                  </div>
 
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">02</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">How we use them</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  We use cookies for several reasons. Some cookies are required for technical reasons in order for our website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies enable us to track and target the interests of our users to enhance the experience on our Online Properties.
-                </p>
-                <div className="rounded-xl border border-golden/20 bg-golden/[0.03] p-4 text-sm italic text-golden/80">
-                  "Our cookies do not store any sensitive medical information. Your health data is always kept separate and secure."
-                </div>
-              </section>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Full Name</label>
+                      <input
+                        required
+                        type="text"
+                        id="name"
+                        placeholder="Juan Dela Cruz"
+                        className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Work Email</label>
+                      <input
+                        required
+                        type="email"
+                        id="email"
+                        placeholder="juan@organization.com"
+                        className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
+                      />
+                    </div>
+                  </div>
 
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">03</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">Managing Cookies</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. 
-                </p>
-              </section>
+                  <div className="space-y-2">
+                    <label htmlFor="organization" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Organization Name</label>
+                    <input
+                      required
+                      type="text"
+                      id="organization"
+                      placeholder="Organization Inc."
+                      className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
+                    />
+                  </div>
 
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">04</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">Updates to this policy</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  We may update this Cookie Policy from time to time in order to reflect, for example, changes to the cookies we use or for other operational, legal or regulatory reasons. Please therefore re-visit this Cookie Policy regularly to stay informed.
-                </p>
-              </section>
+                  <div className="space-y-2">
+                    <label htmlFor="type" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Partnership Type</label>
+                    <select
+                      id="type"
+                      className="w-full appearance-none rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
+                    >
+                      <option>Clinic / Hospital Provider</option>
+                      <option>Health Insurance Partner</option>
+                      <option>Technology Integrator</option>
+                      <option>Government / NGO</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
 
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Partnership Proposal</label>
+                    <textarea
+                      required
+                      id="message"
+                      rows={5}
+                      placeholder="Briefly describe how you envision partnering with Lunas..."
+                      className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5 resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="group flex w-full items-center justify-center gap-3 rounded-full bg-night py-5 text-sm font-bold text-white transition-all hover:bg-night/90 hover:shadow-glow-sm active:scale-[0.98]"
+                  >
+                    Submit Inquiry
+                    <Send size={16} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                  </button>
+                </form>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
+                  <div className="flex h-20 w-20 items-center justify-center rounded-full bg-golden/10 text-golden">
+                    <CheckCircle2 size={40} strokeWidth={1.5} />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="font-display text-3xl font-bold text-night">Inquiry Received</h2>
+                    <p className="text-muted-foreground/60 max-w-xs mx-auto">
+                      Thank you for your interest in partnering with Lunas. Our partnership team will review your details and reach out soon.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="text-sm font-semibold text-golden hover:underline decoration-golden/30 underline-offset-4"
+                  >
+                    Submit another inquiry
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
         </div>
       </main>
 
+      {/* FOOTER */}
       <footer className="relative bg-ivory text-muted-foreground overflow-hidden">
         {/* Decorative glow orbs */}
         <div className="pointer-events-none absolute -top-40 left-1/4 h-80 w-80 rounded-full bg-golden/[0.04] blur-[100px]" />
@@ -261,7 +316,7 @@ export default function CookiePolicyPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cookies" className="transition-colors hover:text-golden text-golden font-medium">
+                    <Link href="/cookies" className="transition-colors hover:text-golden">
                       Cookie Policy
                     </Link>
                   </li>
@@ -280,7 +335,7 @@ export default function CookiePolicyPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/partnerships" className="transition-colors hover:text-golden">
+                    <Link href="/partnerships" className="transition-colors hover:text-golden text-golden font-medium">
                       Partnerships
                     </Link>
                   </li>
@@ -293,6 +348,8 @@ export default function CookiePolicyPage() {
             </div>
           </div>
         </div>
+
+
 
         {/* ── Bottom bar ── */}
         <div className="border-t border-border/50">

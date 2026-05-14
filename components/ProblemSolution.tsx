@@ -156,7 +156,7 @@ export function ProblemSolution() {
       <div className="split-content relative flex h-full w-full flex-col md:flex-row">
 
         {/* ═══════════════ THE PROBLEM (Left) ═══════════════ */}
-        <div className="problem-reveal relative flex flex-col justify-center border-r border-night/5 bg-[#8B3A3A]/[0.015] px-6 py-24 md:w-[45%] md:px-12 lg:px-20">
+        <div className="problem-reveal relative flex flex-col justify-center border-r border-night/5 bg-[#8B3A3A]/[0.015] px-6 py-24 md:w-1/2 md:px-12 lg:px-20">
           <div className="mb-12">
             <div className="reveal-item inline-flex items-center gap-2 rounded-full bg-[#8B3A3A]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#8B3A3A]">
               <AlertTriangle size={12} />
@@ -194,7 +194,7 @@ export function ProblemSolution() {
         </div>
 
         {/* ═══════════════ THE SOLUTION (Right) ═══════════════ */}
-        <div className="solution-reveal relative flex flex-1 flex-col justify-center px-6 py-24 md:px-12 lg:px-20">
+        <div className="solution-reveal relative flex flex-col justify-center px-6 py-24 md:w-1/2 md:px-12 lg:px-20">
           <div className="mb-12">
             <div className="reveal-item inline-flex items-center gap-2 rounded-full bg-golden/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-golden">
               <Sparkles size={12} />

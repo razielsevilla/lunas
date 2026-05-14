@@ -7,10 +7,10 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  UserCheck, 
-  Stethoscope, 
+import {
+  ArrowLeft,
+  UserCheck,
+  Stethoscope,
   Key,
   ShieldAlert,
   MapPin
@@ -63,7 +63,7 @@ export default function TermsPage() {
       {/* MAIN HERO SECTION (Split Aesthetic) */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
+
           {/* Left Column - High Impact Title */}
           <div className="space-y-8">
             <div>
@@ -72,7 +72,7 @@ export default function TermsPage() {
                 <span className="text-golden italic">Engagement.</span>
               </h1>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                Lunas is designed to be a reliable bridge between you and first responders. 
+                Lunas is designed to be a reliable bridge between you and first responders.
                 These terms ensure the platform remains safe and effective for everyone.
               </p>
             </div>
@@ -212,11 +212,6 @@ export default function TermsPage() {
                       Security
                     </a>
                   </li>
-                  <li>
-                    <Link href="/scan/demo-mp-2026-00428" className="transition-colors hover:text-golden">
-                      Demo scan
-                    </Link>
-                  </li>
                 </ul>
               </div>
 
@@ -227,24 +222,19 @@ export default function TermsPage() {
                 </h4>
                 <ul className="space-y-3 text-sm">
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/docs" className="transition-colors hover:text-golden">
                       Documentation
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      API Reference
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/help-center" className="transition-colors hover:text-golden">
                       Help Center
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Status
-                    </a>
+                    <Link href="/security" className="transition-colors hover:text-golden">
+                      Security & Trust
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -261,7 +251,7 @@ export default function TermsPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/terms" className="transition-colors hover:text-golden">
+                    <Link href="/terms" className="transition-colors hover:text-golden text-golden font-medium">
                       Terms of Service
                     </Link>
                   </li>
@@ -290,20 +280,14 @@ export default function TermsPage() {
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/partnerships" className="transition-colors hover:text-golden">
                       Partnerships
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Careers
-                    </a>
+                    <Link href="/careers" className="transition-colors hover:text-golden">Careers</Link>
                   </li>
-                  <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Press Kit
-                    </a>
-                  </li>
+
                 </ul>
               </div>
             </div>
@@ -316,8 +300,7 @@ export default function TermsPage() {
         <div className="border-t border-border/50">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
             <div className="text-xs text-muted-foreground/50">
-              © {new Date().getFullYear()} Lunas · Team Otso-Otso · A SIKAPTala
-              Ideathon project
+              © {new Date().getFullYear()} Lunas
             </div>
             <div className="flex items-center gap-6 text-xs text-muted-foreground/50">
               <Link href="/privacy" className="transition-colors hover:text-golden">
