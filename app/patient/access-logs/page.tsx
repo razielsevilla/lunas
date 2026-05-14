@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
-
 import { PatientLayout } from '@/components/layout/PatientLayout';
 import { Badge } from '@/components/ui/Badge';
 import { Table, type TableColumn } from '@/components/ui/Table';
-import LunasLoader from '@/components/ui/loader'; // Updated import
+import LunasLoader from '@/components/ui/loader';
 
 type AccessLog = {
   id: string;
@@ -46,6 +45,11 @@ export default function PatientAccessLogsPage() {
   const [logs, setLogs] = useState<AccessLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Set Browser Tab Title
+  useEffect(() => {
+    document.title = "Lunas | Patient";
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,9 +92,9 @@ export default function PatientAccessLogsPage() {
         key: 'professional',
         label: 'Professional',
         render: (row) => (
-          <div>
-            <p className="font-semibold text-[#1a1c1e]">{row.professional.name}</p>
-            <p className="text-xs text-[#8d8374]">
+          <div className="py-2">
+            <p className="font-bold text-[#2D2822]">{row.professional.name}</p>
+            <p className="text-xs font-medium text-[#7B8C70]">
               {row.professional.profession} · PRC {row.professional.prcNumber}
             </p>
           </div>
@@ -99,7 +103,7 @@ export default function PatientAccessLogsPage() {
       {
         key: 'accessedAt',
         label: 'Timestamp',
-        render: (row) => <span>{formatDateTime(row.accessedAt)}</span>,
+        render: (row) => <span className="text-[#2D2822]">{formatDateTime(row.accessedAt)}</span>,
       },
       {
         key: 'status',
@@ -110,7 +114,6 @@ export default function PatientAccessLogsPage() {
     [],
   );
 
-  // Full-page loader while data is fetching
   if (isLoading) {
     return (
       <PatientLayout activePath="/patient/access-logs">
@@ -123,25 +126,37 @@ export default function PatientAccessLogsPage() {
 
   return (
     <PatientLayout activePath="/patient/access-logs">
-      <div className="mx-auto max-w-6xl space-y-8 animate-in fade-in duration-700">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">Access Logs</h1>
-          <p className="mt-2 text-sm text-[#8d8374]">A history of who opened your medical passport.</p>
-        </div>
-
-        {error ? (
-          <div className="rounded-[2rem] border border-red-200 bg-red-50 p-6 text-sm text-red-700">{error}</div>
-        ) : (
-          <div className="rounded-[2.5rem] border border-neutral-200 bg-white p-6 shadow-sm">
-            <Table
-              columns={columns}
-              data={logs}
-              emptyState="No access logs yet."
-              initialSortKey="accessedAt"
-              initialSortDirection="desc"
-            />
+      {/* FIX: The padding (px-10 py-10) is placed on this static outer div. 
+          The animation is placed on the inner div. This prevents the "shifting" 
+          effect during the transition.
+      */}
+      <div className="mx-auto max-w-6xl px-10 py-10">
+        <div className="space-y-10 animate-in fade-in duration-500 fill-mode-both">
+          <div>
+            <h1 className="text-4xl font-serif font-bold tracking-tight text-[#2D2822]">
+              Access Logs
+            </h1>
+            <p className="mt-2 text-sm font-medium text-[#7B8C70]">
+              A history of who opened your medical passport.
+            </p>
           </div>
-        )}
+
+          {error ? (
+            <div className="rounded-[2rem] border border-red-200 bg-red-50 p-6 text-sm text-red-700">
+              {error}
+            </div>
+          ) : (
+            <div className="rounded-[2.5rem] border border-neutral-200 bg-white p-8 shadow-sm">
+              <Table
+                columns={columns}
+                data={logs}
+                emptyState="No access logs yet."
+                initialSortKey="accessedAt"
+                initialSortDirection="desc"
+              />
+            </div>
+          )}
+        </div>
       </div>
     </PatientLayout>
   );
