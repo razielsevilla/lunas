@@ -159,7 +159,7 @@ function RejectModal({
   const [reason, setReason] = useState('');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-10 py-10">
       <div className="w-full max-w-md rounded-[24px] border border-neutral-100 bg-white p-8 shadow-2xl">
         <div className="flex items-center justify-between">
           <h3 className="font-serif text-xl font-bold text-[#0C0E14]">

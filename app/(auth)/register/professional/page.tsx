@@ -123,7 +123,7 @@ export default function ProfessionalRegistrationPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#fbf8f2]">
+    <div className="flex min-h-screen bg-[#fbf8f2] font-sans">
       <div className="relative hidden w-1/2 flex-col items-center justify-center bg-[#0f172a] p-12 lg:flex">
         <div
           className="absolute inset-0 opacity-20"
@@ -133,7 +133,7 @@ export default function ProfessionalRegistrationPage() {
           <div className="mb-8 flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
             <Stethoscope className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-5xl font-bold tracking-tight text-white leading-tight">Verified care starts here</h2>
+          <h2 className="text-5xl font-display font-bold tracking-tight text-white leading-tight">Verified care starts here</h2>
           <p className="mt-6 max-w-sm text-lg text-white/60 leading-relaxed">
             Register your PRC details so emergency access stays auditable and secure.
           </p>
@@ -153,7 +153,7 @@ export default function ProfessionalRegistrationPage() {
           </div>
 
           <div className="mt-16">
-            <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">Professional registration</h1>
+            <h1 className="text-4xl font-display font-bold tracking-tight text-[#1a1c1e]">Professional registration</h1>
             <p className="mt-2 font-medium text-[#8d8374]">Step {step} of 3</p>
           </div>
 

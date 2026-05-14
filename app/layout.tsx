@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: 'Lunas Admin',
+  title: 'Lunas | Your medical passport, always with you',
   description: 'Luxury minimalist admin components for Next.js dashboards.',
 };
 

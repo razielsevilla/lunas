@@ -2,11 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { LogoutButton } from '@/components/ui/LogoutButton';
 
 export default function ProfessionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  const isActiveLink = (href: string) => {
+    if (pathname === href) {
+      return true;
+    }
+
+    return pathname.startsWith(href + '/');
+  };
 
   const navItems = [
     { 
@@ -34,56 +43,60 @@ export default function ProfessionalLayout({ children }: { children: React.React
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F9F7F0]">
-      {/* 1. Branding and Header (Midnight Navy Sidebar) */}
-      <aside className="w-72 bg-[#0F172A] text-white flex flex-col fixed h-full shadow-2xl">
-        <div className="p-8 pb-10 flex items-center space-x-3">
-          {/* Dual-circle Logo Icon */}
-          <div className="relative w-8 h-8">
-            <div className="absolute inset-0 bg-orange-400 rounded-full"></div>
-            <div className="absolute inset-0 bg-white rounded-full translate-x-3 opacity-90 mix-blend-screen"></div>
-          </div>
-          <span className="text-2xl font-serif font-bold tracking-tight text-white">Lunas</span>
+    <div className="min-h-screen bg-[#fbf8f2] text-[#1a1c1e]">
+      <aside
+        className="fixed inset-y-0 left-0 z-20 hidden w-72 flex-col bg-[#0f172a] px-6 py-8 md:flex"
+        style={{
+          backgroundImage: 'radial-gradient(circle, rgba(74,85,104,0.45) 1.2px, transparent 1.2px)',
+          backgroundSize: '18px 18px',
+        }}
+      >
+        <div className="flex items-center gap-3 px-2 pb-10">
+          <Image
+            src="/logo/lunas-logo.png"
+            alt="Lunas Logo"
+            width={40}
+            height={40}
+            className="rounded-full object-contain"
+          />
+          <h1 className="text-2xl font-serif font-bold tracking-tight text-white">Lunas</h1>
         </div>
 
-        {/* 2. Navigation Links */}
-        <nav className="flex-1 px-4 space-y-2">
+        <nav className="flex flex-1 flex-col gap-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = isActiveLink(item.href);
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`relative flex items-center space-x-4 px-4 py-3.5 rounded-2xl transition-all group ${
+                className={`group relative flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-medium transition-all ${
                   isActive 
-                    ? 'bg-white/10 text-white' // 3. Selected State Capsule
-                    : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-white/10 text-white shadow-sm ring-1 ring-white/20'
+                    : 'text-white/60 hover:bg-white/5 hover:text-white'
                 }`}
               >
-                {/* 3. The "Active Indicator" */}
                 {isActive && (
-                  <div className="absolute left-0 w-1 h-6 bg-orange-500 rounded-r-full shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
+                  <span className="absolute left-0 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.7)]" />
                 )}
-                
-                <span className={`transition-colors ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                <span className={`h-5 w-5 transition-colors ${isActive ? 'text-white' : 'text-white/40 group-hover:text-white'}`}>
                   {item.icon}
                 </span>
-                <span className="font-medium text-[15px]">{item.name}</span>
+                <span>{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
-        {/* 4. Functional Footer */}
-        <div className="p-8 mt-auto border-t border-slate-800/50">
+        <div className="mt-auto border-t border-white/10 pt-6">
           <LogoutButton />
         </div>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 ml-72">
-        <div className="p-12 max-w-6xl mx-auto">
-          {children}
+      <main className="min-h-screen md:pl-72">
+        <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col">
+          <div className="flex-1 px-10 py-10">
+            {children}
+          </div>
         </div>
       </main>
     </div>

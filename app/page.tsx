@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Lunas — Your medical passport, always with you",
+  title: "Lunas | Your medical passport, always with you",
   description:
     "Lunas is a secure medical passport that gives first responders the right information at the right moment — through a single QR code.",
 };

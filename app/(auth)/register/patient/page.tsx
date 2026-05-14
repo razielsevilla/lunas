@@ -152,7 +152,7 @@ export default function PatientRegistration() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#fbf8f2]">
+    <div className="flex min-h-screen bg-[#fbf8f2] font-sans">
       {/* Branding */}
       <div className="relative hidden w-1/2 flex-col items-center justify-center bg-[#0f172a] p-12 lg:flex">
         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
@@ -160,7 +160,7 @@ export default function PatientRegistration() {
           <div className="mb-8 mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-white/10 backdrop-blur-md">
             <Stethoscope className="h-8 w-8 text-white" />
           </div>
-          <h2 className="text-5xl font-bold text-white">Your passport, your control</h2>
+          <h2 className="text-5xl font-display font-bold text-white">Your passport, your control</h2>
         </div>
       </div>
 
@@ -178,7 +178,7 @@ export default function PatientRegistration() {
           </div>
 
           <div className="mt-16">
-            <h1 className="text-4xl font-bold text-[#1a1c1e]">Patient registration</h1>
+            <h1 className="text-4xl font-display font-bold text-[#1a1c1e]">Patient registration</h1>
             <p className="mt-2 text-[#8d8374]">Step {step} of 3</p>
           </div>
 
