@@ -1,38 +1,48 @@
 "use client";
 
-/**
- * Cookie Policy — Lunas
- * Redesigned to match the Problem & Solution aesthetic.
- */
-
+import React, { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  ShieldCheck, 
-  Settings, 
-  Database,
+import {
+  ArrowLeft,
   MapPin,
-  Cookie
+  Briefcase,
+  Users,
+  Code,
+  HeartPulse,
+  ChevronRight
 } from "lucide-react";
 
-export default function CookiePolicyPage() {
-  const sections = [
+export default function CareersPage() {
+  const openRoles = [
     {
-      icon: Cookie,
-      title: "Essential Cookies",
-      description: "These are strictly necessary for the website to function. They enable core features like security, network management, and accessibility.",
+      title: "Senior Frontend Engineer",
+      department: "Engineering",
+      location: "Remote (Philippines)",
+      type: "Full-time",
+      icon: Code,
     },
     {
-      icon: Database,
-      title: "Performance Tracking",
-      description: "We use these to understand how visitors interact with our site, helping us discover which pages are most and least popular.",
+      title: "Product Designer",
+      department: "Design",
+      location: "Remote (Philippines)",
+      type: "Full-time",
+      icon: Briefcase,
     },
     {
-      icon: Settings,
-      title: "User Preferences",
-      description: "These allow our website to remember choices you make (such as your region) to provide a more personalized experience.",
+      title: "Healthcare Integration Specialist",
+      department: "Operations",
+      location: "Manila, Philippines",
+      type: "Full-time",
+      icon: HeartPulse,
     },
+    {
+      title: "Community Manager",
+      department: "Marketing",
+      location: "Remote",
+      type: "Part-time",
+      icon: Users,
+    }
   ];
 
   return (
@@ -60,104 +70,66 @@ export default function CookiePolicyPage() {
         </Link>
       </header>
 
-      {/* MAIN HERO SECTION (Split Aesthetic) */}
+      {/* MAIN CONTENT */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
-        <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
-          {/* Left Column - High Impact Title */}
-          <div className="space-y-8">
-            <div>
-              <h1 className="font-display text-5xl font-bold leading-[1.1] tracking-tighter text-night md:text-6xl lg:text-7xl">
-                Transparency <br />
-                <span className="text-golden italic">by design.</span>
-              </h1>
-              <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                We use cookies to improve your experience and ensure our platform remains secure. 
-                Learn how we handle your digital footprint.
-              </p>
-            </div>
+        <div className="mx-auto max-w-3xl text-center mb-20">
+          <h1 className="font-display text-5xl font-bold leading-[1.1] tracking-tighter text-night md:text-6xl lg:text-7xl">
+            Join the <br />
+            <span className="text-golden italic">mission.</span>
+          </h1>
+          <p className="mt-8 text-lg leading-relaxed text-muted-foreground/80 text-balance mx-auto">
+            Help us build the future of secure, accessible medical passports.
+            We&apos;re looking for passionate individuals who care deeply about privacy, design, and saving lives.
+          </p>
+        </div>
 
-            {/* Quick Pillars */}
-            <div className="space-y-6">
-              {sections.map((s, idx) => (
-                <div key={idx} className="group relative flex items-start gap-5 rounded-2xl border border-golden/10 bg-white/40 p-6 backdrop-blur-sm transition-all duration-500 hover:border-golden/30 hover:bg-white hover:shadow-soft-xl">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-golden/[0.05] text-golden/60 transition-colors group-hover:bg-golden/10 group-hover:text-golden">
-                    <s.icon size={24} strokeWidth={1.2} />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-lg font-semibold text-night">
-                      {s.title}
-                    </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground/70">
-                      {s.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Roles List */}
+        <div className="mx-auto max-w-4xl space-y-4">
+          <div className="mb-8 flex items-center justify-between border-b border-night/5 pb-4">
+            <h2 className="font-display text-2xl font-bold text-night">Open Roles</h2>
+            <span className="text-sm font-medium text-golden bg-golden/10 px-3 py-1 rounded-full">{openRoles.length} Positions</span>
           </div>
 
-          {/* Right Column - Detailed Policy */}
-          <div className="rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
-            <div className="max-w-none space-y-12 text-muted-foreground/90">
-              <div className="space-y-2 border-b border-night/5 pb-8">
-                <h2 className="font-display text-3xl font-bold text-night">Cookie Policy</h2>
-                <p className="text-sm font-medium uppercase tracking-widest text-golden/60">Last Updated: May 14, 2026</p>
+          {openRoles.map((role, idx) => (
+            <div key={idx} className="group relative flex flex-col md:flex-row md:items-center justify-between gap-6 rounded-2xl border border-golden/10 bg-white/40 p-6 backdrop-blur-sm transition-all duration-500 hover:border-golden/30 hover:bg-white hover:shadow-soft-xl cursor-pointer">
+              <div className="flex items-start gap-5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-golden/[0.05] text-golden/60 transition-colors group-hover:bg-golden/10 group-hover:text-golden">
+                  <role.icon size={24} strokeWidth={1.2} />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-semibold text-night group-hover:text-golden transition-colors">
+                    {role.title}
+                  </h3>
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground/70">
+                    <span className="flex items-center gap-1.5"><Briefcase size={14} /> {role.department}</span>
+                    <span className="hidden md:inline">•</span>
+                    <span className="flex items-center gap-1.5"><MapPin size={14} /> {role.location}</span>
+                    <span className="hidden md:inline">•</span>
+                    <span>{role.type}</span>
+                  </div>
+                </div>
               </div>
-
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">01</span>
+              <div className="md:ml-auto pl-[4.25rem] md:pl-0 flex items-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-night/5 text-night transition-transform group-hover:bg-golden group-hover:text-night group-hover:scale-110">
+                  <ChevronRight size={18} />
                 </div>
-                <h3 className="text-xl font-bold text-night">What are cookies?</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  Cookies are small text files that are placed on your computer by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
-                </p>
-              </section>
-
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">02</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">How we use them</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  We use cookies for several reasons. Some cookies are required for technical reasons in order for our website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies enable us to track and target the interests of our users to enhance the experience on our Online Properties.
-                </p>
-                <div className="rounded-xl border border-golden/20 bg-golden/[0.03] p-4 text-sm italic text-golden/80">
-                  "Our cookies do not store any sensitive medical information. Your health data is always kept separate and secure."
-                </div>
-              </section>
-
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">03</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">Managing Cookies</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. 
-                </p>
-              </section>
-
-              <section className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-px flex-1 bg-night/5" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">04</span>
-                </div>
-                <h3 className="text-xl font-bold text-night">Updates to this policy</h3>
-                <p className="leading-relaxed text-sm lg:text-base">
-                  We may update this Cookie Policy from time to time in order to reflect, for example, changes to the cookies we use or for other operational, legal or regulatory reasons. Please therefore re-visit this Cookie Policy regularly to stay informed.
-                </p>
-              </section>
-
+              </div>
             </div>
-          </div>
+          ))}
 
+          <div className="mt-12 rounded-2xl bg-golden/5 border border-golden/10 p-8 text-center">
+            <h3 className="font-display text-xl font-semibold text-night mb-2">Don&apos;t see a perfect fit?</h3>
+            <p className="text-muted-foreground/80 mb-6 max-w-md mx-auto text-sm">
+              We&apos;re always looking for talented people. Send your resume and a brief intro to our team.
+            </p>
+            <a href="mailto:careers@lunas.app" className="inline-flex rounded-full bg-night px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-night/90 hover:shadow-glow-sm">
+              Email us
+            </a>
+          </div>
         </div>
       </main>
 
+      {/* FOOTER */}
       <footer className="relative bg-ivory text-muted-foreground overflow-hidden">
         {/* Decorative glow orbs */}
         <div className="pointer-events-none absolute -top-40 left-1/4 h-80 w-80 rounded-full bg-golden/[0.04] blur-[100px]" />
@@ -261,7 +233,7 @@ export default function CookiePolicyPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cookies" className="transition-colors hover:text-golden text-golden font-medium">
+                    <Link href="/cookies" className="transition-colors hover:text-golden">
                       Cookie Policy
                     </Link>
                   </li>
@@ -285,7 +257,7 @@ export default function CookiePolicyPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/careers" className="transition-colors hover:text-golden">Careers</Link>
+                    <Link href="/careers" className="transition-colors hover:text-golden text-golden font-medium">Careers</Link>
                   </li>
 
                 </ul>
@@ -293,6 +265,8 @@ export default function CookiePolicyPage() {
             </div>
           </div>
         </div>
+
+
 
         {/* ── Bottom bar ── */}
         <div className="border-t border-border/50">

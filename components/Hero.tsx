@@ -94,7 +94,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={heroRef} className="mx-auto max-w-6xl px-6 pb-32 pt-12 md:pb-40">
+    <section ref={heroRef} className="mx-auto max-w-6xl px-6 pb-32 pt-6 md:pb-40">
       <div className="grid items-center gap-12 md:gap-20 md:grid-cols-[1.1fr_0.9fr]">
         {/* Left — Copy */}
         <div>

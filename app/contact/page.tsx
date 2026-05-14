@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  Mail, 
-  MessageSquare, 
-  Clock, 
+import {
+  ArrowLeft,
+  Mail,
+  MessageSquare,
+  Clock,
   Send,
   CheckCircle2,
   MapPin,
@@ -71,7 +71,7 @@ export default function ContactPage() {
       {/* MAIN CONTENT */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
+
           {/* Left Column - Context & Info */}
           <div className="space-y-8">
             <div>
@@ -80,7 +80,7 @@ export default function ContactPage() {
                 <span className="text-golden italic">for you.</span>
               </h1>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80 text-balance">
-                Have questions about your Lunas passport? Our team is dedicated to 
+                Have questions about your Lunas passport? Our team is dedicated to
                 ensuring you have the support you need, when you need it.
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function ContactPage() {
           <div className="relative">
             {/* Subtle glow behind the form */}
             <div className="absolute -inset-4 rounded-[3rem] bg-golden/5 blur-2xl" />
-            
+
             <div className="relative rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
               {!submitted ? (
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -124,20 +124,20 @@ export default function ContactPage() {
                   <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Full Name</label>
-                      <input 
+                      <input
                         required
-                        type="text" 
-                        id="name" 
+                        type="text"
+                        id="name"
                         placeholder="Juan Dela Cruz"
                         className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
                       />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Email Address</label>
-                      <input 
+                      <input
                         required
-                        type="email" 
-                        id="email" 
+                        type="email"
+                        id="email"
                         placeholder="juan@example.com"
                         className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
                       />
@@ -146,7 +146,7 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <label htmlFor="subject" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Subject</label>
-                    <select 
+                    <select
                       id="subject"
                       className="w-full appearance-none rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5"
                     >
@@ -160,16 +160,16 @@ export default function ContactPage() {
 
                   <div className="space-y-2">
                     <label htmlFor="message" className="text-xs font-bold uppercase tracking-widest text-night/40 ml-1">Message</label>
-                    <textarea 
+                    <textarea
                       required
-                      id="message" 
+                      id="message"
                       rows={5}
                       placeholder="How can we help you today?"
                       className="w-full rounded-2xl border border-border bg-ivory/50 px-5 py-4 text-night outline-none transition-all focus:border-golden/30 focus:bg-white focus:ring-4 focus:ring-golden/5 resize-none"
                     />
                   </div>
 
-                  <button 
+                  <button
                     type="submit"
                     className="group flex w-full items-center justify-center gap-3 rounded-full bg-night py-5 text-sm font-bold text-white transition-all hover:bg-night/90 hover:shadow-glow-sm active:scale-[0.98]"
                   >
@@ -188,7 +188,7 @@ export default function ContactPage() {
                       Thank you for reaching out. Our team has received your message and will respond within 24 hours.
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setSubmitted(false)}
                     className="text-sm font-semibold text-golden hover:underline decoration-golden/30 underline-offset-4"
                   >
@@ -213,9 +213,10 @@ export default function ContactPage() {
           <div className="h-px bg-gradient-to-r from-transparent via-golden/20 to-transparent" />
         </div>
 
-        {/* Main footer grid */}
+        {/* ── Main footer grid ── */}
         <div className="mx-auto max-w-6xl px-6 pt-16 pb-12">
           <div className="grid gap-8 md:grid-cols-[0.7fr_1.3fr]">
+            {/* Brand column */}
             <div className="space-y-5">
               <Logo variant="light" />
               <p className="max-w-xs text-sm leading-relaxed text-muted-foreground/70">
@@ -228,49 +229,137 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Nav columns */}
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+              {/* Product */}
               <div>
-                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">Product</h4>
+                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">
+                  Product
+                </h4>
                 <ul className="space-y-3 text-sm">
-                  <li><Link href="/#features" className="hover:text-golden">Features</Link></li>
-                  <li><Link href="/#why" className="hover:text-golden">Why Lunas</Link></li>
-                  <li><Link href="/#how" className="hover:text-golden">How it works</Link></li>
-                  <li><Link href="/#trust" className="hover:text-golden">Security</Link></li>
+                  <li>
+                    <a href="/#features" className="transition-colors hover:text-golden">
+                      Features
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/#why" className="transition-colors hover:text-golden">
+                      Why Lunas
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/#how" className="transition-colors hover:text-golden">
+                      How it works
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/#trust" className="transition-colors hover:text-golden">
+                      Security
+                    </a>
+                  </li>
                 </ul>
               </div>
+
+              {/* Resources */}
               <div>
-                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">Resources</h4>
+                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">
+                  Resources
+                </h4>
                 <ul className="space-y-3 text-sm">
-                  <li><a href="#" className="hover:text-golden">Documentation</a></li>
-                  <li><a href="#" className="hover:text-golden">API Reference</a></li>
-                  <li><a href="#" className="hover:text-golden">Help Center</a></li>
+                  <li>
+                    <Link href="/docs" className="transition-colors hover:text-golden">
+                      Documentation
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/help-center" className="transition-colors hover:text-golden">
+                      Help Center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/security" className="transition-colors hover:text-golden">
+                      Security & Trust
+                    </Link>
+                  </li>
                 </ul>
               </div>
+
+              {/* Legal */}
               <div>
-                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">Legal</h4>
+                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">
+                  Legal
+                </h4>
                 <ul className="space-y-3 text-sm">
-                  <li><Link href="/privacy" className="hover:text-golden">Privacy Policy</Link></li>
-                  <li><Link href="/terms" className="hover:text-golden">Terms of Service</Link></li>
-                  <li><Link href="/data-processing" className="hover:text-golden">Data Processing</Link></li>
+                  <li>
+                    <Link href="/privacy" className="transition-colors hover:text-golden">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/terms" className="transition-colors hover:text-golden">
+                      Terms of Service
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/data-processing" className="transition-colors hover:text-golden">
+                      Data Processing
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/cookies" className="transition-colors hover:text-golden">
+                      Cookie Policy
+                    </Link>
+                  </li>
                 </ul>
               </div>
+
+              {/* Connect */}
               <div>
-                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">Connect</h4>
+                <h4 className="mb-4 font-display text-sm font-semibold tracking-wide text-night">
+                  Connect
+                </h4>
                 <ul className="space-y-3 text-sm">
-                  <li><Link href="/contact" className="hover:text-golden text-golden">Contact Us</Link></li>
-                  <li><a href="#" className="hover:text-golden">Partnerships</a></li>
-                  <li><a href="#" className="hover:text-golden">Careers</a></li>
+                  <li>
+                    <Link href="/contact" className="transition-colors hover:text-golden text-golden font-medium">
+                      Contact Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/partnerships" className="transition-colors hover:text-golden">
+                      Partnerships
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/careers" className="transition-colors hover:text-golden">Careers</Link>
+                  </li>
+
                 </ul>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
+
+
+        {/* ── Bottom bar ── */}
         <div className="border-t border-border/50">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
             <div className="text-xs text-muted-foreground/50">
-              © {new Date().getFullYear()} Lunas · Team Otso-Otso · A SIKAPTala Ideathon project
+              © {new Date().getFullYear()} Lunas
+            </div>
+            <div className="flex items-center gap-6 text-xs text-muted-foreground/50">
+              <Link href="/privacy" className="transition-colors hover:text-golden">
+                Privacy
+              </Link>
+              <Link href="/terms" className="transition-colors hover:text-golden">
+                Terms
+              </Link>
+              <Link href="/data-processing" className="transition-colors hover:text-golden">
+                Data Processing
+              </Link>
+              <Link href="/cookies" className="transition-colors hover:text-golden">
+                Cookies
+              </Link>
             </div>
           </div>
         </div>

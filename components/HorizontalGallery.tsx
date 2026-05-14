@@ -10,11 +10,11 @@ if (typeof window !== "undefined") {
 }
 
 const images = [
-  "/images/mockup-images (6).png",
-  "/images/mockup-images (7).png",
-  "/images/mockup-images (8).png",
-  "/images/mockup-images (9).png",
-  "/images/mockup-images (10).png"
+  "/images/mockup-images_2ndRow (1).png",
+  "/images/mockup-images_2ndRow (2).png",
+  "/images/mockup-images_2ndRow (3).png",
+  "/images/mockup-images_2ndRow (4).png",
+  "/images/mockup-images_2ndRow (5).png"
 ];
 
 export function HorizontalGallery() {
@@ -24,7 +24,7 @@ export function HorizontalGallery() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (!galleryRef.current || !containerRef.current) return;
-      
+
       // Calculate how far to move to the left
       // We want to stop when the right edge of the gallery aligns with the right edge of the screen
       // Add a little padding to the end so it doesn't abruptly stop.
@@ -56,23 +56,23 @@ export function HorizontalGallery() {
     <div className="relative">
       <section ref={containerRef} className="relative bg-ivory h-screen overflow-hidden">
         <div className="flex h-full items-center">
-        <div ref={galleryRef} className="flex gap-6 px-6 md:px-12 lg:px-20 will-change-transform w-max">
-          {images.map((src, i) => (
-            <div
-              key={i}
-              className="relative h-[60vh] w-[85vw] flex-shrink-0 overflow-hidden rounded-2xl md:w-[60vw] lg:w-[45vw] shadow-soft bg-night/5 border border-border/50"
-            >
-              <Image
-                src={src}
-                alt={`Lunas Mockup Gallery ${i + 1}`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 45vw"
-                className="object-cover"
-              />
-            </div>
-          ))}
+          <div ref={galleryRef} className="flex gap-6 px-6 md:px-12 lg:px-20 will-change-transform w-max">
+            {images.map((src, i) => (
+              <div
+                key={i}
+                className="relative h-[60vh] w-[85vw] flex-shrink-0 overflow-hidden rounded-2xl md:w-[60vw] lg:w-[45vw] shadow-soft bg-night/5 border border-border/50"
+              >
+                <Image
+                  src={src}
+                  alt={`Lunas Mockup Gallery ${i + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 45vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
       </section>
     </div>
   );

@@ -1,37 +1,36 @@
 "use client";
 
 /**
- * Cookie Policy — Lunas
- * Redesigned to match the Problem & Solution aesthetic.
+ * Documentation — Lunas
+ * Redesigned to match the Premium Aesthetic.
  */
 
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  ShieldCheck, 
-  Settings, 
-  Database,
-  MapPin,
-  Cookie
+import {
+  ArrowLeft,
+  BookOpen,
+  Terminal,
+  Shield,
+  MapPin
 } from "lucide-react";
 
-export default function CookiePolicyPage() {
+export default function DocsPage() {
   const sections = [
     {
-      icon: Cookie,
-      title: "Essential Cookies",
-      description: "These are strictly necessary for the website to function. They enable core features like security, network management, and accessibility.",
+      icon: BookOpen,
+      title: "User Guide",
+      description: "Learn how to set up your medical passport, add your medical history, and manage your emergency contacts effectively.",
     },
     {
-      icon: Database,
-      title: "Performance Tracking",
-      description: "We use these to understand how visitors interact with our site, helping us discover which pages are most and least popular.",
+      icon: Terminal,
+      title: "API Reference",
+      description: "For healthcare providers and developers looking to integrate Lunas into their existing systems and applications.",
     },
     {
-      icon: Settings,
-      title: "User Preferences",
-      description: "These allow our website to remember choices you make (such as your region) to provide a more personalized experience.",
+      icon: Shield,
+      title: "Security Protocols",
+      description: "Deep dive into our encryption standards, data sovereignty principles, and how we keep your information private.",
     },
   ];
 
@@ -60,20 +59,20 @@ export default function CookiePolicyPage() {
         </Link>
       </header>
 
-      {/* MAIN HERO SECTION (Split Aesthetic) */}
+      {/* MAIN HERO SECTION */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
+
           {/* Left Column - High Impact Title */}
           <div className="space-y-8">
             <div>
               <h1 className="font-display text-5xl font-bold leading-[1.1] tracking-tighter text-night md:text-6xl lg:text-7xl">
-                Transparency <br />
-                <span className="text-golden italic">by design.</span>
+                Technical <br />
+                <span className="text-golden italic">Resources.</span>
               </h1>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                We use cookies to improve your experience and ensure our platform remains secure. 
-                Learn how we handle your digital footprint.
+                Everything you need to know about using, integrating, and trusting Lunas.
+                Our documentation is designed for both users and professionals.
               </p>
             </div>
 
@@ -97,12 +96,12 @@ export default function CookiePolicyPage() {
             </div>
           </div>
 
-          {/* Right Column - Detailed Policy */}
+          {/* Right Column - Content */}
           <div className="rounded-[2.5rem] border border-night/[0.03] bg-white/60 p-8 shadow-soft-2xl backdrop-blur-md md:p-12 lg:p-16">
             <div className="max-w-none space-y-12 text-muted-foreground/90">
               <div className="space-y-2 border-b border-night/5 pb-8">
-                <h2 className="font-display text-3xl font-bold text-night">Cookie Policy</h2>
-                <p className="text-sm font-medium uppercase tracking-widest text-golden/60">Last Updated: May 14, 2026</p>
+                <h2 className="font-display text-3xl font-bold text-night">Overview</h2>
+                <p className="text-sm font-medium uppercase tracking-widest text-golden/60">Documentation · Version 1.0</p>
               </div>
 
               <section className="space-y-4">
@@ -110,9 +109,9 @@ export default function CookiePolicyPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">01</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">What are cookies?</h3>
+                <h3 className="text-xl font-bold text-night">Getting Started</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  Cookies are small text files that are placed on your computer by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site.
+                  To begin using Lunas, create an account and fill in your vital medical information. Once complete, a unique QR code is generated for you. This code can be printed on physical cards, worn as jewelry, or saved on your phone's lock screen.
                 </p>
               </section>
 
@@ -121,12 +120,12 @@ export default function CookiePolicyPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">02</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">How we use them</h3>
+                <h3 className="text-xl font-bold text-night">In an Emergency</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  We use cookies for several reasons. Some cookies are required for technical reasons in order for our website to operate, and we refer to these as "essential" or "strictly necessary" cookies. Other cookies enable us to track and target the interests of our users to enhance the experience on our Online Properties.
+                  When a first responder scans your QR code, they are immediately presented with your critical medical data: allergies, blood type, current medications, and emergency contacts. No app is required for the responder; it works via any standard mobile browser.
                 </p>
                 <div className="rounded-xl border border-golden/20 bg-golden/[0.03] p-4 text-sm italic text-golden/80">
-                  "Our cookies do not store any sensitive medical information. Your health data is always kept separate and secure."
+                  "Speed is the most critical factor in emergency care. Lunas reduces information gathering time from minutes to seconds."
                 </div>
               </section>
 
@@ -135,9 +134,9 @@ export default function CookiePolicyPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">03</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Managing Cookies</h3>
+                <h3 className="text-xl font-bold text-night">Data Management</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  You can set or amend your web browser controls to accept or refuse cookies. If you choose to reject cookies, you may still use our website though your access to some functionality and areas of our website may be restricted. 
+                  You can update your medical profile at any time. We recommend reviewing your information every six months or after any major medical change. All updates are instantly reflected across your QR code ecosystem.
                 </p>
               </section>
 
@@ -146,9 +145,13 @@ export default function CookiePolicyPage() {
                   <div className="h-px flex-1 bg-night/5" />
                   <span className="text-[10px] font-bold uppercase tracking-widest text-night/20">04</span>
                 </div>
-                <h3 className="text-xl font-bold text-night">Updates to this policy</h3>
+                <h3 className="text-xl font-bold text-night">Support</h3>
                 <p className="leading-relaxed text-sm lg:text-base">
-                  We may update this Cookie Policy from time to time in order to reflect, for example, changes to the cookies we use or for other operational, legal or regulatory reasons. Please therefore re-visit this Cookie Policy regularly to stay informed.
+                  Need help with your account or have technical questions? Our support team is available 24/7.
+                  <br />
+                  <a href="mailto:support@lunas.health" className="mt-2 inline-block font-semibold text-golden hover:underline decoration-golden/30 underline-offset-4">
+                    support@lunas.health
+                  </a>
                 </p>
               </section>
 
@@ -222,7 +225,7 @@ export default function CookiePolicyPage() {
                 </h4>
                 <ul className="space-y-3 text-sm">
                   <li>
-                    <Link href="/docs" className="transition-colors hover:text-golden">
+                    <Link href="/docs" className="transition-colors hover:text-golden text-golden font-medium">
                       Documentation
                     </Link>
                   </li>
@@ -261,7 +264,7 @@ export default function CookiePolicyPage() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cookies" className="transition-colors hover:text-golden text-golden font-medium">
+                    <Link href="/cookies" className="transition-colors hover:text-golden">
                       Cookie Policy
                     </Link>
                   </li>

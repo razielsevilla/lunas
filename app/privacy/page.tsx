@@ -7,10 +7,10 @@
 
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-import { 
-  ArrowLeft, 
-  ShieldCheck, 
-  Lock, 
+import {
+  ArrowLeft,
+  ShieldCheck,
+  Lock,
   EyeOff,
   MapPin
 } from "lucide-react";
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
       {/* MAIN HERO SECTION (Split Aesthetic) */}
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-48 pt-12">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr]">
-          
+
           {/* Left Column - High Impact Title */}
           <div className="space-y-8">
             <div>
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
                 <span className="text-golden italic">foundational.</span>
               </h1>
               <p className="mt-8 max-w-md text-lg leading-relaxed text-muted-foreground/80">
-                Every design decision we make starts with your data sovereignty. 
+                Every design decision we make starts with your data sovereignty.
                 We've built Lunas to be as secure as it is life-saving.
               </p>
             </div>
@@ -215,11 +215,6 @@ export default function PrivacyPage() {
                       Security
                     </a>
                   </li>
-                  <li>
-                    <Link href="/scan/demo-mp-2026-00428" className="transition-colors hover:text-golden">
-                      Demo scan
-                    </Link>
-                  </li>
                 </ul>
               </div>
 
@@ -230,24 +225,19 @@ export default function PrivacyPage() {
                 </h4>
                 <ul className="space-y-3 text-sm">
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/docs" className="transition-colors hover:text-golden">
                       Documentation
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      API Reference
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/help-center" className="transition-colors hover:text-golden">
                       Help Center
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Status
-                    </a>
+                    <Link href="/security" className="transition-colors hover:text-golden">
+                      Security & Trust
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -259,7 +249,7 @@ export default function PrivacyPage() {
                 </h4>
                 <ul className="space-y-3 text-sm">
                   <li>
-                    <Link href="/privacy" className="transition-colors hover:text-golden">
+                    <Link href="/privacy" className="transition-colors hover:text-golden text-golden font-medium">
                       Privacy Policy
                     </Link>
                   </li>
@@ -293,20 +283,14 @@ export default function PrivacyPage() {
                     </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
+                    <Link href="/partnerships" className="transition-colors hover:text-golden">
                       Partnerships
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Careers
-                    </a>
+                    <Link href="/careers" className="transition-colors hover:text-golden">Careers</Link>
                   </li>
-                  <li>
-                    <a href="#" className="transition-colors hover:text-golden">
-                      Press Kit
-                    </a>
-                  </li>
+
                 </ul>
               </div>
             </div>
@@ -319,8 +303,7 @@ export default function PrivacyPage() {
         <div className="border-t border-border/50">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-6 md:flex-row">
             <div className="text-xs text-muted-foreground/50">
-              © {new Date().getFullYear()} Lunas · Team Otso-Otso · A SIKAPTala
-              Ideathon project
+              © {new Date().getFullYear()} Lunas
             </div>
             <div className="flex items-center gap-6 text-xs text-muted-foreground/50">
               <Link href="/privacy" className="transition-colors hover:text-golden">
