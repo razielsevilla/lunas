@@ -66,6 +66,7 @@ export function HorizontalGallery() {
                 src={src}
                 alt={`Lunas Mockup Gallery ${i + 1}`}
                 fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 60vw, 45vw"
                 className="object-cover"
               />
             </div>

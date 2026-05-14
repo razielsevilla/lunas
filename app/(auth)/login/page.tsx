@@ -186,7 +186,7 @@ function LoginForm() {
                     </button>
                   </div>
                   <div className="flex justify-end pt-1">
-                    <Link href="#" className="text-[11px] font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700">
+                    <Link href="/contact" className="text-[11px] font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700">
                       Forgot Password?
                     </Link>
                   </div>

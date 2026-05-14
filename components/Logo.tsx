@@ -10,6 +10,7 @@ export const Logo = ({ className = "", variant = "light" }: { className?: string
           src="/logo/lunas-logo.png" 
           alt="Lunas Logo" 
           fill
+          sizes="40px"
           className="object-cover"
           priority
         />
