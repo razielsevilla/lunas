@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { ScanLine, Users, ShieldCheck, ShieldAlert, CheckCircle2, Clock, ChevronRight } from 'lucide-react';
 import LunasLoader from '@/components/ui/loader';
 
+// Note: Ensure Playfair Display is imported in your layout or global CSS 
+// since it was noted as not yet existing in the project.
+
 type AuthMeResponse = {
     firstName: string;
     lastName: string;
@@ -78,33 +81,42 @@ export default function ProfessionalDashboardPage() {
     const isVerified = dashData?.prcStatus === 'VERIFIED';
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-[#fbf8f2] to-[#f2eae0]">
+        /* Updated Background to #F9F5EB per Design System */
+        <div className="min-h-screen bg-[#F9F5EB] font-['Plus_Jakarta_Sans',_sans-serif]">
             {userLoading ? (
                 <div className="flex h-screen w-full items-center justify-center">
                     <LunasLoader />
                 </div>
             ) : (
-                <div className="space-y-10 px-6 py-10 md:px-16 lg:px-20 animate-in fade-in duration-700">
+                /* STEP 4: Content Padding set to px-10 py-10 */
+                <div className="space-y-10 px-10 py-10 animate-in fade-in duration-700">
+                    
                     {/* Header */}
                     <div>
-                        <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">
+                        {/* STEP 1: Using Playfair Display for Heading */}
+                        <h1 className="text-4xl font-bold tracking-tight text-[#0B1120] font-['Playfair_Display',_serif]">
                             {greeting}, {displayName.split(' ')[0]}.
                         </h1>
-                        <p className="mt-2 text-[#5c6066]">Welcome to your medical portal. Access patient records securely.</p>
+                        {/* STEP 2: Using Plus Jakarta Sans for Subtext */}
+                        <p className="mt-2 text-[#5c6066] font-['Plus_Jakarta_Sans',_sans-serif]">
+                            Welcome to your medical portal. Access patient records securely.
+                        </p>
                     </div>
 
                     {/* Count Summary Cards */}
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {/* STEP 3: All text inside cards set to Plus Jakarta Sans */}
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 font-['Plus_Jakarta_Sans',_sans-serif]">
+                        
                         {/* Scans Today */}
                         <div className="rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Today</p>
-                                    <p className="mt-3 text-4xl font-bold text-[#1a1c1e]">{dashData?.scansToday ?? 0}</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#7B8C70]">Today</p>
+                                    <p className="mt-3 text-4xl font-bold text-[#0B1120]">{dashData?.scansToday ?? 0}</p>
                                     <p className="mt-2 text-sm font-medium text-[#5c6066]">Scans Today</p>
                                 </div>
-                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f0ebe3]">
-                                    <ScanLine className="h-5 w-5 text-[#1a1c1e]" />
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#7B8C70]/10">
+                                    <ScanLine className="h-5 w-5 text-[#7B8C70]" />
                                 </div>
                             </div>
                         </div>
@@ -113,12 +125,12 @@ export default function ProfessionalDashboardPage() {
                         <div className="rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">This Week</p>
-                                    <p className="mt-3 text-4xl font-bold text-[#1a1c1e]">{dashData?.patientsThisWeek ?? 0}</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#7B8C70]">This Week</p>
+                                    <p className="mt-3 text-4xl font-bold text-[#0B1120]">{dashData?.patientsThisWeek ?? 0}</p>
                                     <p className="mt-2 text-sm font-medium text-[#5c6066]">Patients This Week</p>
                                 </div>
-                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f0ebe3]">
-                                    <Users className="h-5 w-5 text-[#1a1c1e]" />
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#7B8C70]/10">
+                                    <Users className="h-5 w-5 text-[#7B8C70]" />
                                 </div>
                             </div>
                         </div>
@@ -152,7 +164,7 @@ export default function ProfessionalDashboardPage() {
                     </div>
 
                     {/* Info Banner */}
-                    <div className="rounded-[2rem] border border-blue-200 bg-blue-50 p-6 shadow-sm">
+                    <div className="rounded-[2rem] border border-blue-200 bg-blue-50 p-6 shadow-sm font-['Plus_Jakarta_Sans',_sans-serif]">
                         <div className="flex items-start gap-4">
                             <CheckCircle2 className="h-5 w-5 text-blue-600 flex-shrink-0 mt-1" />
                             <div>
@@ -163,30 +175,30 @@ export default function ProfessionalDashboardPage() {
                     </div>
 
                     {/* Recent Patients */}
-                    <div className="rounded-[2.5rem] border border-neutral-200 bg-white shadow-sm overflow-hidden">
+                    <div className="rounded-[2.5rem] border border-neutral-200 bg-white shadow-sm overflow-hidden font-['Plus_Jakarta_Sans',_sans-serif]">
                         <div className="flex items-center justify-between px-10 pt-10 pb-6">
-                            <h2 className="text-2xl font-bold text-[#1a1c1e]">Recent Patients</h2>
-                            <a href="/professional/recent-patients" className="text-sm font-medium text-[#8d8374] hover:text-[#1a1c1e] transition-colors flex items-center gap-1">
+                            <h2 className="text-2xl font-bold text-[#0B1120] font-['Playfair_Display',_serif]">Recent Patients</h2>
+                            <a href="/professional/recent-patients" className="text-sm font-medium text-[#7B8C70] hover:text-[#0B1120] transition-colors flex items-center gap-1">
                                 View all <ChevronRight className="h-4 w-4" />
                             </a>
                         </div>
                         {!dashData?.recentPatients?.length ? (
                             <div className="flex flex-col items-center justify-center gap-3 pb-12 pt-4 text-center">
-                                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f0ebe3]">
-                                    <Users className="h-7 w-7 text-[#8d8374]" />
+                                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#F9F5EB]">
+                                    <Users className="h-7 w-7 text-[#7B8C70]" />
                                 </div>
-                                <p className="text-sm text-[#8d8374]">No patients scanned yet. Use a patient QR code to get started.</p>
+                                <p className="text-sm text-[#5c6066]">No patients scanned yet. Use a patient QR code to get started.</p>
                             </div>
                         ) : (
                             <ul className="divide-y divide-neutral-100 pb-4">
                                 {dashData.recentPatients.map((p) => (
-                                    <li key={p.id} className="flex items-center gap-4 px-10 py-4 hover:bg-[#fbf8f2] transition-colors">
-                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1c1e] text-white text-sm font-bold shrink-0">
+                                    <li key={p.id} className="flex items-center gap-4 px-10 py-4 hover:bg-[#F9F5EB] transition-colors">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0B1120] text-white text-sm font-bold shrink-0">
                                             {getInitials(p.firstName, p.lastName)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-semibold text-[#1a1c1e] truncate">{p.firstName} {p.lastName}</p>
-                                            <p className="text-xs text-[#8d8374] mt-0.5 flex items-center gap-1">
+                                            <p className="font-semibold text-[#0B1120] truncate">{p.firstName} {p.lastName}</p>
+                                            <p className="text-xs text-[#5c6066] mt-0.5 flex items-center gap-1">
                                                 <Clock className="h-3 w-3" /> {timeAgo(p.accessedAt)}
                                             </p>
                                         </div>
