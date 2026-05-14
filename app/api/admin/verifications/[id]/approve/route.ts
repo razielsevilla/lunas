@@ -37,16 +37,11 @@ export async function POST(
       return Response.json({ error: 'This professional is already verified.' }, { status: 409 });
     }
 
-    // Generate a secure random 6-digit PIN
-    const plainPin = crypto.randomInt(100000, 999999).toString();
-    const hashedPin = await hashPassword(plainPin);
-
-    // Update profile: set verified + store hashed PIN
+    // Update profile: set verified
     await prisma.professionalProfile.update({
       where: { id },
       data: {
         prcStatus: 'VERIFIED',
-        pin: hashedPin,
         pinFailCount: 0,
         verifiedAt: new Date(),
       },
@@ -60,20 +55,18 @@ export async function POST(
       { prcNumber: profile.prcNumber }
     );
 
-    // Email the plaintext PIN to the professional
+    // Email the professional
     await sendEmail(
       profile.user.email,
       'Lunas — Your PRC Verification is Approved',
       `Congratulations, ${profile.user.firstName}!\n\n` +
         `Your PRC license (${profile.prcNumber}) has been verified.\n\n` +
-        `Your access PIN is: ${plainPin}\n\n` +
-        `Use this PIN when scanning patient QR codes. Keep it confidential.\n` +
-        `If you suspect your PIN has been compromised, contact your admin immediately.\n\n` +
+        `You can now access patient medical records using the 6-digit PIN you created during registration.\n\n` +
         `— Lunas Medical Passport System`
     );
 
     return Response.json({
-      message: 'Professional approved and PIN sent via email.',
+      message: 'Professional approved.',
       prcNumber: profile.prcNumber,
     });
   } catch (err) {

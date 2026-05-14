@@ -23,6 +23,7 @@ export default function PinEntryPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(1);
+  const [isInvalidQr, setIsInvalidQr] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -32,7 +33,13 @@ export default function PinEntryPage() {
         const response = await fetch(`/api/scan/${uuid}`, { cache: 'no-store' });
         const data = (await response.json()) as Partial<ScanPreviewResponse> & { error?: string };
 
+        if (response.status === 401 || response.status === 403) {
+          router.push(`/login?redirect=/scan/${uuid}`);
+          return;
+        }
+
         if (!response.ok) {
+          setIsInvalidQr(true);
           throw new Error(data.error || 'Unable to load patient preview.');
         }
 
@@ -82,7 +89,7 @@ export default function PinEntryPage() {
       }
 
       // Success: store data and redirect
-      sessionStorage.setItem('emergencyPatientData', JSON.stringify(data));
+      sessionStorage.setItem('emergencyPatientData', JSON.stringify(data.patient));
       router.push('/professional/emergency-view');
     } catch (submitError: any) {
       // Error already set
@@ -103,6 +110,15 @@ export default function PinEntryPage() {
           <div className="flex min-h-[22rem] items-center justify-center">
             <Spinner size="lg" label="Loading patient preview" />
           </div>
+        ) : isInvalidQr ? (
+          <div className="flex flex-col items-center justify-center text-center py-12">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/10 mb-6 ring-1 ring-red-500/20">
+               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-400"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Invalid QR Code</h1>
+            <p className="text-white/60 mb-8 max-w-sm">This medical passport QR code is invalid, expired, or does not exist in the Lunas system.</p>
+            <Button type="button" onClick={() => router.push('/')} variant="outline" className="w-full sm:w-auto">Return to Home</Button>
+          </div>
         ) : (
           <>
             <p className="text-sm font-semibold uppercase tracking-[0.32em] text-white/45">Emergency access</p>
@@ -115,21 +131,22 @@ export default function PinEntryPage() {
 
             <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
               {/* 6-dot PIN input */}
-              <div className="flex justify-center space-x-2">
+              <label htmlFor="pin-input" className="flex justify-center space-x-2 cursor-pointer">
                 {Array.from({ length: 6 }, (_, i) => (
                   <div
                     key={i}
-                    className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-2xl font-bold ${
+                    className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-2xl font-bold transition-colors ${
                       i < pin.length
-                        ? 'bg-white text-black border-white'
-                        : 'border-white/30 text-transparent'
+                        ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.4)]'
+                        : 'border-white/30 text-transparent hover:border-white/50'
                     }`}
                   >
                     {i < pin.length ? '●' : ''}
                   </div>
                 ))}
-              </div>
+              </label>
               <input
+                id="pin-input"
                 type="text"
                 inputMode="numeric"
                 value={pin}
@@ -142,9 +159,6 @@ export default function PinEntryPage() {
               {error && (
                 <p className="text-sm text-red-300 text-center">
                   {error}
-                  {attempt > 1 && !error.includes('locked') && (
-                    <span className="block mt-1">Attempt {attempt} of 5</span>
-                  )}
                 </p>
               )}
 

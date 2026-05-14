@@ -40,8 +40,15 @@ a {
   }
 
   @keyframes floating {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   .animate-float {
@@ -49,15 +56,37 @@ a {
   }
 
   @keyframes qr-breathe {
-    0%, 100% { transform: scale(1); opacity: 0.4; }
-    50% { transform: scale(1.05); opacity: 0.8; }
+
+    0%,
+    100% {
+      transform: scale(1);
+      opacity: 0.4;
+    }
+
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
   }
 
   @keyframes scan {
-    0% { top: 0%; opacity: 0; }
-    5% { opacity: 0.6; }
-    95% { opacity: 0.6; }
-    100% { top: 100%; opacity: 0; }
+    0% {
+      top: 0%;
+      opacity: 0;
+    }
+
+    5% {
+      opacity: 0.6;
+    }
+
+    95% {
+      opacity: 0.6;
+    }
+
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
   }
 
   .group-hover\:animate-qr-breathe {

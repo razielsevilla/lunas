@@ -1,12 +1,13 @@
 import { prisma } from '@/lib/db';
 import { sendEmail } from '@/lib/mailer';
 import { sendSms } from '@/lib/sms';
+import { requireRole, toAuthErrorResponse } from '@/lib/auth';
 
 
 // ---------------------------------------------------------------------------
 // GET /api/scan/[uuid]
 //
-// Public endpoint for paramedics scanning a QR code.
+// Endpoint for professionals scanning a QR code. Requires authentication.
 // Returns ONLY the minimal unencrypted data needed to identify the patient
 // before PIN entry. Does NOT return PHI.
 // ---------------------------------------------------------------------------
@@ -18,7 +19,10 @@ export async function GET(
   const { uuid } = await params;
 
   try {
-    // 1. Find the patient profile by QR UUID
+    // 1. Require PROFESSIONAL session
+    await requireRole(req, 'PROFESSIONAL');
+
+    // 2. Find the patient profile by QR UUID
     const patientProfile = await prisma.patientProfile.findUnique({
       where: { qrUuid: uuid },
       include: {
@@ -52,11 +56,7 @@ export async function GET(
       { status: 200 }
     );
   } catch (err) {
-    console.error('[api/scan]', err);
-    return Response.json(
-      { error: 'An internal server error occurred.' },
-      { status: 500 }
-    );
+    return toAuthErrorResponse(err);
   }
 }
 

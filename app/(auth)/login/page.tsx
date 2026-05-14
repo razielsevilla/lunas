@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Eye, 
   EyeOff, 
@@ -15,12 +15,24 @@ import {
 } from "lucide-react";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#fbf8f2]" />}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get('redirect');
   
   // UI State
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [requiresPin, setRequiresPin] = useState(false);
+  const [pin, setPin] = useState("");
 
   // Form State
   const [formData, setFormData] = useState({
@@ -42,17 +54,25 @@ export default function LoginPage() {
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requiresPin ? { ...formData, pin } : formData),
       });
 
       const data = await response.json();
+
+      if (response.status === 403 && data.requiresPin) {
+        setRequiresPin(true);
+        setError(null);
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Login failed");
       }
 
       // Successful Login: Redirect based on role returned by your API
-      if (data.role === "PATIENT") {
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      } else if (data.role === "PATIENT") {
         router.push("/patient/dashboard");
       } else if (data.role === "PROFESSIONAL") {
         router.push("/professional/dashboard");
@@ -91,64 +111,99 @@ export default function LoginPage() {
           )}
 
           <form className="mt-12 space-y-6" onSubmit={handleLogin}>
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Email</label>
-              <div className="relative">
-                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
-                  <Mail className="h-4 w-4" />
-                </span>
-                <input 
-                  name="email"
-                  type="email" 
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="name@clinic.com"
-                  className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all" 
-                />
+            {requiresPin ? (
+              <div className="space-y-6 animate-in slide-in-from-right-4 fade-in duration-300">
+                <div className="pt-2">
+                  <p className="text-sm font-semibold text-[#1a1c1e] mb-4 text-center">Medical Access PIN</p>
+                  <label htmlFor="pin-input" className="flex justify-center space-x-3 cursor-pointer">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`w-12 h-12 rounded-full border-2 flex items-center justify-center text-xl font-bold transition-colors ${
+                          i < pin.length
+                            ? 'bg-[#1a1c1e] text-white border-[#1a1c1e] shadow-md'
+                            : 'border-neutral-300 text-transparent hover:border-neutral-400 bg-white'
+                        }`}
+                      >
+                        {i < pin.length ? '●' : ''}
+                      </div>
+                    ))}
+                  </label>
+                  <input
+                    id="pin-input"
+                    type="text"
+                    inputMode="numeric"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    className="sr-only"
+                    maxLength={6}
+                    autoFocus
+                  />
+                  <p className="text-center text-[11px] text-[#8d8374] mt-4">Please verify your identity to access the portal.</p>
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Email</label>
+                  <div className="relative">
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
+                      <Mail className="h-4 w-4" />
+                    </span>
+                    <input 
+                      name="email"
+                      type="email" 
+                      required
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="name@clinic.com"
+                      className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all" 
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Password</label>
-              <div className="relative">
-                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
-                  <Lock className="h-4 w-4" />
-                </span>
-                <input 
-                  name="password"
-                  type={showPassword ? "text" : "password"} 
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" 
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#1a1c1e]"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              <div className="flex justify-end pt-1">
-                <Link href="#" className="text-[11px] font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700">
-                  Forgot Password?
-                </Link>
-              </div>
-            </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Password</label>
+                  <div className="relative">
+                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-400">
+                      <Lock className="h-4 w-4" />
+                    </span>
+                    <input 
+                      name="password"
+                      type={showPassword ? "text" : "password"} 
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      className="w-full rounded-2xl border border-neutral-200 bg-white px-12 py-4 text-sm outline-none focus:ring-2 focus:ring-[#1a1c1e]/5 transition-all [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-[#1a1c1e]"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  <div className="flex justify-end pt-1">
+                    <Link href="#" className="text-[11px] font-bold uppercase tracking-wider text-amber-600 hover:text-amber-700">
+                      Forgot Password?
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
 
             <button 
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || (requiresPin && pin.length !== 6)}
               className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0f172a] py-4 text-sm font-bold text-white transition-all hover:bg-[#1e293b] active:scale-[0.98] disabled:bg-neutral-400"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
               ) : (
                 <>
-                  Access Portal <ArrowRight className="h-4 w-4" />
+                  {requiresPin ? "Verify PIN" : "Access Portal"} <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>

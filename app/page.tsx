@@ -10,7 +10,11 @@ import { ScrollRevealFeatures } from "@/components/ScrollRevealFeatures";
 import { ProblemSolution } from "@/components/ProblemSolution";
 import { HowItWorks } from "@/components/HowItWorks";
 import { FAQTestimonials } from "@/components/FAQTestimonials";
+import { MockupImages } from "@/components/MockupImages";
+import { TextReveal } from "@/components/TextReveal";
+import { HorizontalGallery } from "@/components/HorizontalGallery";
 import { Hero } from "@/components/Hero";
+import { Header } from "@/components/Header";
 import {
   Mail,
   ArrowRight,
@@ -75,11 +79,17 @@ export default function HomePage() {
       {/* ═══════════════ FEATURES ═══════════════ */}
       <ScrollRevealFeatures />
 
+
       {/* ═══════════════ PROBLEM & SOLUTION ═══════════════ */}
       <ProblemSolution />
 
       {/* ═══════════════ HOW IT WORKS ═══════════════ */}
       <HowItWorks />
+
+      {/* ═══════════════ MOCKUP SHOWCASE ═══════════════ */}
+      <MockupImages />
+      <TextReveal />
+      <HorizontalGallery />
       <FAQTestimonials />
 
       {/* ═══════════════ TRUST ═══════════════ */}

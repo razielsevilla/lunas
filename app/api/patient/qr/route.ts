@@ -17,7 +17,10 @@ export async function GET(req: Request): Promise<Response> {
     // 2. Fetch the patient's profile to get their QR UUID
     const patientProfile = await prisma.patientProfile.findUnique({
       where: { userId: session.user.id },
-      select: { qrUuid: true },
+      select: { 
+        qrUuid: true,
+        user: { select: { firstName: true, lastName: true } }
+      },
     });
 
     if (!patientProfile) {
@@ -37,6 +40,8 @@ export async function GET(req: Request): Promise<Response> {
       {
         qrUuid,
         qrImageBase64,
+        firstName: patientProfile.user.firstName,
+        lastName: patientProfile.user.lastName,
       },
       { status: 200 }
     );

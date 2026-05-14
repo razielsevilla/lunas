@@ -19,6 +19,7 @@ type FormState = {
   hospitalAffiliation: string;
   password: string;
   confirmPassword: string;
+  pin: string;
 };
 
 export default function ProfessionalRegistrationPage() {
@@ -37,6 +38,7 @@ export default function ProfessionalRegistrationPage() {
     hospitalAffiliation: '',
     password: '',
     confirmPassword: '',
+    pin: '',
   });
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -75,7 +77,9 @@ export default function ProfessionalRegistrationPage() {
   const isStepThreeComplete =
     passwordRegex.test(formData.password) &&
     !forbiddenChars.test(formData.password) &&
-    formData.password === formData.confirmPassword;
+    formData.password === formData.confirmPassword &&
+    formData.pin.length === 6 &&
+    /^\d+$/.test(formData.pin);
 
   const handleSubmit = async () => {
     if (!isStepThreeComplete) {
@@ -100,6 +104,7 @@ export default function ProfessionalRegistrationPage() {
           profession: formData.profession,
           specialization: formData.specialization || undefined,
           hospitalAffiliation: formData.hospitalAffiliation || undefined,
+          pin: formData.pin,
         }),
       });
 
@@ -243,6 +248,35 @@ export default function ProfessionalRegistrationPage() {
                   onChange={handleChange}
                   placeholder="Confirm password"
                 />
+
+                <div className="pt-2">
+                  <p className="text-sm font-semibold text-[#1a1c1e] mb-3">Medical Access PIN</p>
+                  <label htmlFor="pin-input" className="flex justify-center space-x-3 cursor-pointer">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <div
+                        key={i}
+                        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-xl font-bold transition-colors ${
+                          i < formData.pin.length
+                            ? 'bg-[#1a1c1e] text-white border-[#1a1c1e]'
+                            : 'border-neutral-300 text-transparent hover:border-neutral-400'
+                        }`}
+                      >
+                        {i < formData.pin.length ? '●' : ''}
+                      </div>
+                    ))}
+                  </label>
+                  <input
+                    id="pin-input"
+                    type="text"
+                    inputMode="numeric"
+                    value={formData.pin}
+                    onChange={(e) => setFormData(cur => ({ ...cur, pin: e.target.value.replace(/\D/g, '').slice(0, 6) }))}
+                    className="sr-only"
+                    maxLength={6}
+                  />
+                  <p className="text-center text-[11px] text-[#8d8374] mt-3">Used for authorizing QR scans.</p>
+                </div>
+
                 <div className="rounded-xl bg-neutral-50 p-4 border border-neutral-100 grid grid-cols-2 gap-2">
                    <div className={`text-[10px] flex items-center gap-1 ${formData.password.length >= 8 ? "text-green-600" : "text-[#8d8374]"}`}>
                       <Check className="h-3 w-3" /> 8+ Chars

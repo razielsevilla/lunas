@@ -25,6 +25,7 @@ const registerProfessionalSchema = z.object({
   profession: z.string().min(1).max(100).trim(),
   specialization: z.string().max(100).trim().optional(),
   hospitalAffiliation: z.string().max(200).trim().optional(),
+  pin: z.string().length(6, 'PIN must be exactly 6 digits.').regex(/^\d+$/, 'PIN must contain only numbers.'),
 });
 
 // ---------------------------------------------------------------------------
@@ -54,6 +55,7 @@ export async function POST(req: Request): Promise<Response> {
       profession,
       specialization,
       hospitalAffiliation,
+      pin,
     } = parsed.data;
 
     // 2. Check for duplicate email
@@ -76,8 +78,9 @@ export async function POST(req: Request): Promise<Response> {
       );
     }
 
-    // 4. Hash password
+    // 4. Hash password and PIN
     const passwordHash = await hashPassword(password);
+    const pinHash = await hashPassword(pin);
 
     // 5. Create User + ProfessionalProfile in a single transaction
     const user = await prisma.$transaction(async (tx) => {
@@ -100,7 +103,8 @@ export async function POST(req: Request): Promise<Response> {
           profession,
           specialization: specialization ?? null,
           hospitalAffil: hospitalAffiliation ?? null,
-          prcStatus: 'PENDING',
+          prcStatus: 'VERIFIED', // Auto-verify for easy demo
+          pin: pinHash,
         },
       });
 
@@ -110,7 +114,7 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json(
       {
         userId: user.id,
-        message: 'Registration submitted. Awaiting PRC verification.',
+        message: 'Registration successful. You can now log in.',
       },
       { status: 201 }
     );

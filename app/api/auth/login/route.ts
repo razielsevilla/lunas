@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/db';
-import { verifyPassword } from '@/lib/auth';
+import { verifyPassword, verifyPin } from '@/lib/auth';
 import { createSession, buildSessionCookie } from '@/lib/session';
 
 // ---------------------------------------------------------------------------
@@ -10,6 +10,7 @@ import { createSession, buildSessionCookie } from '@/lib/session';
 const loginSchema = z.object({
   email: z.string().email('Invalid email address.'),
   password: z.string().min(1, 'Password is required.'),
+  pin: z.string().optional(),
 });
 
 // ---------------------------------------------------------------------------
@@ -48,6 +49,32 @@ export async function POST(req: Request): Promise<Response> {
         { error: 'Invalid email or password.' },
         { status: 401 }
       );
+    }
+
+    // 3.5. Professional 2FA Challenge (PIN)
+    if (user.role === 'PROFESSIONAL') {
+      const professionalProfile = await prisma.professionalProfile.findUnique({
+        where: { userId: user.id },
+      });
+
+      if (professionalProfile?.pin) {
+        if (!parsed.data.pin) {
+          // Password is correct, but PIN was omitted. Trigger 2FA flow.
+          return Response.json(
+            { requiresPin: true, message: 'Please enter your 6-digit access PIN.' },
+            { status: 403 }
+          );
+        }
+
+        // Verify the provided PIN
+        const pinValid = await verifyPin(parsed.data.pin, professionalProfile.pin);
+        if (!pinValid) {
+          return Response.json(
+            { error: 'Incorrect PIN.' },
+            { status: 401 }
+          );
+        }
+      }
     }
 
     // 4. Create session in DB
