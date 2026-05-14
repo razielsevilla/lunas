@@ -67,16 +67,7 @@ export default function EmergencyView() {
     );
   }
 
-  const calculateAge = (birthDate: string) => {
-    const birth = new Date(birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
-  };
+
 
   const formatAccessTime = (date: Date) => {
     return date.toLocaleString('en-PH', {
@@ -97,7 +88,7 @@ export default function EmergencyView() {
     router.push('/professional/dashboard');
   };
 
-  const age = patientData ? calculateAge(patientData.birthDate) : 0;
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 text-white print:bg-white print:text-black">
@@ -143,10 +134,6 @@ export default function EmergencyView() {
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm print:flex-col">
-                <div className="rounded-3xl bg-white/5 px-4 py-3 text-slate-100 print:bg-gray-100 print:text-black">
-                  <div className="text-xs uppercase tracking-[0.24em] text-slate-400 print:text-gray-600">Age</div>
-                  <div className="mt-2 text-2xl font-semibold">{age}</div>
-                </div>
                 <div className="rounded-3xl bg-white/5 px-4 py-3 text-slate-100 print:bg-gray-100 print:text-black">
                   <div className="text-xs uppercase tracking-[0.24em] text-slate-400 print:text-gray-600">Blood Type</div>
                   <div className="mt-2 text-2xl font-semibold">{patientData.bloodType}</div>
