@@ -106,7 +106,7 @@ export default function PatientQrCodePage() {
             ) : error ? (
               <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
                 {error}
-                <Button variant="outline" className="mt-4 block" onClick={refreshQrCode}>Try Again</Button>
+                <Button variant="outline" className="mt-4 block" onClick={() => window.location.reload()}>Try Again</Button>
               </div>
             ) : qrCode ? (
               <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_240px]">
