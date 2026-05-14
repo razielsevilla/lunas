@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Stethoscope, QrCode, AlertCircle, User, Clock, CheckCircle2 } from 'lucide-react';
+import { ScanLine, Users, ShieldCheck, ShieldAlert, CheckCircle2, Clock, ChevronRight } from 'lucide-react';
 import LunasLoader from '@/components/ui/loader';
 
 type AuthMeResponse = {
@@ -11,39 +10,35 @@ type AuthMeResponse = {
     role: string;
 };
 
-type ScanLog = {
-    id: string;
-    scannedAt: string;
-    status: string;
-    patient: {
-        name: string;
-        uuid: string;
-    };
+type DashboardData = {
+    scansToday: number;
+    patientsThisWeek: number;
+    prcStatus: string;
+    recentPatients: { id: string; firstName: string; lastName: string; accessedAt: string }[];
 };
 
-function getInitials(name: string) {
-    if (!name) return "";
-    return name
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase() ?? '')
-        .join('') || '';
+function getInitials(first: string, last: string) {
+    return `${first?.[0] ?? ''}${last?.[0] ?? ''}`.toUpperCase();
+}
+
+function timeAgo(dateStr: string): string {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    const days = Math.floor(hrs / 24);
+    return `${days}d ago`;
 }
 
 export default function ProfessionalDashboardPage() {
     const [displayName, setDisplayName] = useState('');
-    const [avatarInitials, setAvatarInitials] = useState('');
     const [userLoading, setUserLoading] = useState(true);
     const [greeting, setGreeting] = useState('Good day');
-    const [mounted, setMounted] = useState(false);
-    const [recentScans, setRecentScans] = useState<ScanLog[]>([]);
-    const [scansLoading, setScansLoading] = useState(true);
+    const [dashData, setDashData] = useState<DashboardData | null>(null);
 
     useEffect(() => {
-        setMounted(true);
-        
         const hour = new Date().getHours();
         if (hour < 12) setGreeting('Good morning');
         else if (hour < 18) setGreeting('Good afternoon');
@@ -53,7 +48,10 @@ export default function ProfessionalDashboardPage() {
 
         const loadDashboardData = async () => {
             try {
-                const authRes = await fetch('/api/auth/me', { cache: 'no-store' });
+                const [authRes, dashRes] = await Promise.all([
+                    fetch('/api/auth/me', { cache: 'no-store' }),
+                    fetch('/api/professional/dashboard', { cache: 'no-store' }),
+                ]);
 
                 if (cancelled) return;
 
@@ -61,23 +59,23 @@ export default function ProfessionalDashboardPage() {
                     const data = (await authRes.json()) as AuthMeResponse;
                     const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ').trim();
                     setDisplayName(fullName || 'Professional');
-                    setAvatarInitials(getInitials(fullName) || 'P');
                 }
 
-            } catch (err) {
-                console.error("Dashboard fetch error:", err);
-            } finally {
-                if (!cancelled) {
-                    setUserLoading(false);
-                    setScansLoading(false);
+                if (dashRes.ok) {
+                    setDashData(await dashRes.json());
                 }
+            } catch (err) {
+                console.error('Dashboard fetch error:', err);
+            } finally {
+                if (!cancelled) setUserLoading(false);
             }
         };
 
         void loadDashboardData();
-
         return () => { cancelled = true; };
     }, []);
+
+    const isVerified = dashData?.prcStatus === 'VERIFIED';
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#fbf8f2] to-[#f2eae0]">
@@ -87,7 +85,7 @@ export default function ProfessionalDashboardPage() {
                 </div>
             ) : (
                 <div className="space-y-10 px-6 py-10 md:px-16 lg:px-20 animate-in fade-in duration-700">
-                    {/* Header Section */}
+                    {/* Header */}
                     <div>
                         <h1 className="text-4xl font-bold tracking-tight text-[#1a1c1e]">
                             {greeting}, {displayName.split(' ')[0]}.
@@ -95,49 +93,62 @@ export default function ProfessionalDashboardPage() {
                         <p className="mt-2 text-[#5c6066]">Welcome to your medical portal. Access patient records securely.</p>
                     </div>
 
-                    {/* Quick Action Cards */}
+                    {/* Count Summary Cards */}
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                        {/* Scan Patient QR */}
-                        <Link href="/professional/scan">
-                            <div className="group cursor-pointer rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm transition-all hover:shadow-md hover:border-neutral-300">
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Quick Action</p>
-                                        <p className="mt-3 text-lg font-bold text-[#1a1c1e]">Scan QR Code</p>
-                                        <p className="mt-2 text-xs text-[#8d8374]">Access patient medical records</p>
-                                    </div>
-                                    <QrCode className="h-6 w-6 text-[#1a1c1e] opacity-40 group-hover:opacity-100 transition-opacity" />
+                        {/* Scans Today */}
+                        <div className="rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Today</p>
+                                    <p className="mt-3 text-4xl font-bold text-[#1a1c1e]">{dashData?.scansToday ?? 0}</p>
+                                    <p className="mt-2 text-sm font-medium text-[#5c6066]">Scans Today</p>
+                                </div>
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f0ebe3]">
+                                    <ScanLine className="h-5 w-5 text-[#1a1c1e]" />
                                 </div>
                             </div>
-                        </Link>
+                        </div>
 
-                        {/* Emergency View */}
-                        <Link href="/professional/emergency-view">
-                            <div className="group cursor-pointer rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm transition-all hover:shadow-md hover:border-neutral-300">
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Emergency</p>
-                                        <p className="mt-3 text-lg font-bold text-[#1a1c1e]">Emergency Access</p>
-                                        <p className="mt-2 text-xs text-[#8d8374]">View critical records</p>
-                                    </div>
-                                    <AlertCircle className="h-6 w-6 text-[#1a1c1e] opacity-40 group-hover:opacity-100 transition-opacity" />
+                        {/* Patients This Week */}
+                        <div className="rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">This Week</p>
+                                    <p className="mt-3 text-4xl font-bold text-[#1a1c1e]">{dashData?.patientsThisWeek ?? 0}</p>
+                                    <p className="mt-2 text-sm font-medium text-[#5c6066]">Patients This Week</p>
+                                </div>
+                                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f0ebe3]">
+                                    <Users className="h-5 w-5 text-[#1a1c1e]" />
                                 </div>
                             </div>
-                        </Link>
+                        </div>
 
-                        {/* Profile */}
-                        <Link href="/professional/profile">
-                            <div className="group cursor-pointer rounded-[2rem] border border-neutral-200 bg-white p-7 shadow-sm transition-all hover:shadow-md hover:border-neutral-300">
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <p className="text-[10px] font-bold uppercase tracking-widest text-[#8d8374]">Account</p>
-                                        <p className="mt-3 text-lg font-bold text-[#1a1c1e]">Your Profile</p>
-                                        <p className="mt-2 text-xs text-[#8d8374]">Manage your details</p>
-                                    </div>
-                                    <User className="h-6 w-6 text-[#1a1c1e] opacity-40 group-hover:opacity-100 transition-opacity" />
+                        {/* PRC Status */}
+                        <div className={`rounded-[2rem] border p-7 shadow-sm ${
+                            isVerified
+                                ? 'border-emerald-200 bg-emerald-50'
+                                : 'border-amber-200 bg-amber-50'
+                        }`}>
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className={`text-[10px] font-bold uppercase tracking-widest ${isVerified ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                        PRC Status
+                                    </p>
+                                    <p className={`mt-3 text-2xl font-bold ${isVerified ? 'text-emerald-800' : 'text-amber-800'}`}>
+                                        {isVerified ? 'Verified' : 'Unverified'}
+                                    </p>
+                                    <p className={`mt-2 text-sm font-medium ${isVerified ? 'text-emerald-700' : 'text-amber-700'}`}>
+                                        {isVerified ? 'License confirmed' : 'Pending verification'}
+                                    </p>
+                                </div>
+                                <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${isVerified ? 'bg-emerald-100' : 'bg-amber-100'}`}>
+                                    {isVerified
+                                        ? <ShieldCheck className="h-5 w-5 text-emerald-700" />
+                                        : <ShieldAlert className="h-5 w-5 text-amber-700" />
+                                    }
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     </div>
 
                     {/* Info Banner */}
@@ -151,37 +162,38 @@ export default function ProfessionalDashboardPage() {
                         </div>
                     </div>
 
-                    {/* Getting Started Section */}
-                    <div>
-                        <h2 className="text-2xl font-bold text-[#1a1c1e] mb-6">Getting Started</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {/* Step 1 */}
-                            <div className="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-sm">
-                                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#f0ebe3] mb-4">
-                                    <span className="text-lg font-bold text-[#1a1c1e]">1</span>
-                                </div>
-                                <h3 className="font-bold text-[#1a1c1e] mb-2">Scan Patient QR</h3>
-                                <p className="text-sm text-[#5c6066]">Use your scanner or camera to scan patient QR codes and access their medical records instantly.</p>
-                            </div>
-
-                            {/* Step 2 */}
-                            <div className="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-sm">
-                                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#f0ebe3] mb-4">
-                                    <span className="text-lg font-bold text-[#1a1c1e]">2</span>
-                                </div>
-                                <h3 className="font-bold text-[#1a1c1e] mb-2">Review Medical Data</h3>
-                                <p className="text-sm text-[#5c6066]">Access patient allergies, medications, surgeries, and emergency contacts in a secure, organized format.</p>
-                            </div>
-
-                            {/* Step 3 */}
-                            <div className="rounded-[2rem] border border-neutral-200 bg-white p-6 shadow-sm">
-                                <div className="flex items-center justify-center h-12 w-12 rounded-full bg-[#f0ebe3] mb-4">
-                                    <span className="text-lg font-bold text-[#1a1c1e]">3</span>
-                                </div>
-                                <h3 className="font-bold text-[#1a1c1e] mb-2">Document Access</h3>
-                                <p className="text-sm text-[#5c6066]">All your access is logged and encrypted. Emergency access bypasses normal protocols when needed.</p>
-                            </div>
+                    {/* Recent Patients */}
+                    <div className="rounded-[2.5rem] border border-neutral-200 bg-white shadow-sm overflow-hidden">
+                        <div className="flex items-center justify-between px-10 pt-10 pb-6">
+                            <h2 className="text-2xl font-bold text-[#1a1c1e]">Recent Patients</h2>
+                            <a href="/professional/recent-patients" className="text-sm font-medium text-[#8d8374] hover:text-[#1a1c1e] transition-colors flex items-center gap-1">
+                                View all <ChevronRight className="h-4 w-4" />
+                            </a>
                         </div>
+                        {!dashData?.recentPatients?.length ? (
+                            <div className="flex flex-col items-center justify-center gap-3 pb-12 pt-4 text-center">
+                                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f0ebe3]">
+                                    <Users className="h-7 w-7 text-[#8d8374]" />
+                                </div>
+                                <p className="text-sm text-[#8d8374]">No patients scanned yet. Use a patient QR code to get started.</p>
+                            </div>
+                        ) : (
+                            <ul className="divide-y divide-neutral-100 pb-4">
+                                {dashData.recentPatients.map((p) => (
+                                    <li key={p.id} className="flex items-center gap-4 px-10 py-4 hover:bg-[#fbf8f2] transition-colors">
+                                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1a1c1e] text-white text-sm font-bold shrink-0">
+                                            {getInitials(p.firstName, p.lastName)}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-[#1a1c1e] truncate">{p.firstName} {p.lastName}</p>
+                                            <p className="text-xs text-[#8d8374] mt-0.5 flex items-center gap-1">
+                                                <Clock className="h-3 w-3" /> {timeAgo(p.accessedAt)}
+                                            </p>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </div>
                 </div>
             )}

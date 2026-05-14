@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { Spinner } from '@/components/ui/Spinner';
+import LunasLoader from '@/components/ui/loader';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ShieldCheck, Lock, User, Hash, AlertTriangle, CheckCircle2 } from 'lucide-react';
@@ -49,6 +49,12 @@ export default function ProfessionalProfile() {
 
   useEffect(() => {
     fetchProfile();
+    // Register l-cardio for the inline PIN submit spinner
+    async function registerLoader() {
+      const { cardio } = await import('ldrs');
+      cardio.register();
+    }
+    void registerLoader();
   }, []);
 
   const handlePinChange = async (e: React.FormEvent) => {
@@ -94,8 +100,8 @@ export default function ProfessionalProfile() {
 
   if (isLoading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
-        <Spinner size="lg" className="text-slate-900" />
+      <div className="flex h-screen w-full items-center justify-center">
+        <LunasLoader />
       </div>
     );
   }
@@ -255,10 +261,10 @@ export default function ProfessionalProfile() {
 
               <Button 
                 type="submit" 
-                className="w-full bg-slate-900 text-white hover:bg-slate-800 rounded-2xl h-12"
+                className="w-full bg-slate-900 text-white hover:bg-slate-800 rounded-2xl h-12 flex items-center justify-center gap-2"
                 disabled={isChangingPin || newPin.length !== 6 || (data.pinSet && currentPin.length !== 6)}
               >
-                {isChangingPin ? <Spinner size="sm" className="mr-2" /> : null}
+                {isChangingPin ? <l-cardio size="18" stroke="2" speed="2" color="#C5A377" /> : null}
                 {data.pinSet ? 'Update PIN' : 'Set PIN'}
               </Button>
             </form>
